@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Orbit System - Settings</title>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    
+
+    <style>
+        .settings-container {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .settings-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            padding: 26px;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, .04);
+        }
+
+        .settings-profile {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        .settings-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #635bff, #8b5cf6);
+            color: #fff;
+            font-size: 25px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .settings-main h2 {
+            margin: 0 0 6px;
+            color: #0f172a;
+            font-size: 22px;
+        }
+
+        .settings-email {
+            margin: 0 0 9px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .settings-role {
+            display: inline-flex;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: #eef2ff;
+            color: #4338ca;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .settings-section {
+            margin-top: 24px;
+        }
+
+        .settings-section h3 {
+            margin: 0 0 16px;
+            color: #0f172a;
+            font-size: 16px;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .setting-item {
+            padding: 15px 16px;
+            background: #f8fafc;
+            border: 1px solid #edf1f5;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-height: 72px;
+        }
+
+        .setting-label {
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .setting-item strong {
+            color: #0f172a;
+            font-size: 14px;
+            word-break: break-word;
+        }
+
+        .status-active {
+            display: inline-flex;
+            width: fit-content;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: #dcfce7;
+            color: #166534;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .status-inactive {
+            display: inline-flex;
+            width: fit-content;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: #fee2e2;
+            color: #991b1b;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .access-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .access-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            background: #f8fafc;
+            border-radius: 11px;
+            border: 1px solid #edf1f5;
+            font-size: 14px;
+            color: #334155;
+        }
+
+        .access-on {
+            background: #dcfce7;
+            color: #166534;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 9px;
+            border-radius: 999px;
+        }
+
+        .access-off {
+            background: #f1f5f9;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 9px;
+            border-radius: 999px;
+        }
+
+        .settings-loading {
+            padding: 30px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .settings-error {
+            padding: 20px;
+            border-radius: 12px;
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        @media (max-width: 700px) {
+            .settings-grid,
+            .access-list {
+                grid-template-columns: 1fr;
+            }
+
+            .settings-profile {
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="logo">
+            <span class="logo-mark">◉</span>
+            Orbit system
+        </div>
+
+        <div class="nav-section">WORKSPACE</div>
+
+        <a class="nav-link" href="../dashboard.html">
+            ◉ Dashboard
+        </a>
+
+        <a class="nav-link" href="projects.html">
+            ▣ Projects
+        </a>
+
+        <a class="nav-link" href="tasks.html">
+            ✓ Tasks
+        </a>
+
+        <a class="nav-link" href="teams.html">
+            ♢ Teams
+        </a>
+
+        <a class="nav-link" href="inventory.html">
+            ▤ Inventory
+        </a>
+
+        <div class="nav-section">ORGANIZATION</div>
+
+        <a class="nav-link" href="employees.html">
+            ♙ Employees
+        </a>
+
+        <a class="nav-link" href="reports.html">
+            ◫ Reports
+        </a>
+
+        <a class="nav-link" href="notifications.html">
+            ◌ Notifications
+        </a>
+
+        <a class="nav-link" href="chat.html">
+            ☵ Chat
+        </a>
+
+        <div class="nav-section">SYSTEM</div>
+
+        <a class="nav-link active" href="settings.html">
+            ⚙ Settings
+        </a>
+
+        <a
+            class="nav-link"
+            href="#"
+            onclick="logout(); return false;"
+        >
+            ↪ Logout
+        </a>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <button
+                class="btn secondary menu-toggle"
+                onclick="document.getElementById('sidebar').classList.toggle('open')"
+            >
+                ☰
+            </button>
+
+        </header>
+
+
+        <!-- CONTENT -->
+        <section class="content">
+
+            <div class="page-title">
+
+                <div>
+
+                    <span class="eyebrow">
+                        ORBIT / SETTINGS
+                    </span>
+
+                    <h1>
+                        Settings
+                    </h1>
+                </div>
+
+            </div>
+
+
+            <div class="settings-container">
+
+                <!-- DATA WILL BE INSERTED HERE -->
+                <div
+                    class="settings-card"
+                    id="settingsData"
+                >
+                    <div class="settings-loading">
+                        Loading account information...
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<div id="toast" class="toast"></div>
+
+
+<script src="../js/api.js"></script>
+<script src="../js/settings.js"></script>
+
+<script>
+function logout() {
+    localStorage.removeItem("orbit_token");
+    window.location.href = "../login.html";
+}
+</script>
+
+</body>
+
+</html>

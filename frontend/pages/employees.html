@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Orbit System - Employees</title>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    
+
+    <style>
+        .employee-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .employee-toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .employee-toolbar .search {
+            min-width: 260px;
+        }
+
+        .employee-toolbar select {
+            height: 42px;
+            padding: 0 12px;
+            border: 1px solid #dbe2ea;
+            border-radius: 10px;
+            background: #fff;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, .55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .employee-modal {
+            width: min(720px, 100%);
+            max-height: 90vh;
+            overflow-y: auto;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, .2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px 24px;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border: 0;
+            border-radius: 10px;
+            background: #f1f5f9;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .employee-form {
+            padding: 24px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #475569;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            height: 44px;
+            box-sizing: border-box;
+            border: 1px solid #dbe2ea;
+            border-radius: 10px;
+            padding: 0 12px;
+            background: #fff;
+            color: #0f172a;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #635bff;
+            box-shadow: 0 0 0 3px rgba(99, 91, 255, .1);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #eef2f7;
+        }
+
+        .form-error {
+            display: none;
+            margin-top: 16px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: #fef2f2;
+            color: #b91c1c;
+            font-size: 13px;
+        }
+
+        .form-error.show {
+            display: block;
+        }
+
+        .empty-row {
+            text-align: center;
+            padding: 35px !important;
+            color: #94a3b8;
+        }
+
+        .role-badge,
+        .status-badge {
+            display: inline-flex;
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .role-badge {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        @media (max-width: 700px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .employee-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .employee-toolbar .search {
+                min-width: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="logo">
+            <span class="logo-mark">◉</span>
+            Orbit system
+        </div>
+
+        <div class="nav-section">WORKSPACE</div>
+
+        <a class="nav-link" href="../dashboard.html">◉ Dashboard</a>
+        <a class="nav-link" href="projects.html">▣ Projects</a>
+        <a class="nav-link" href="tasks.html">✓ Tasks</a>
+        <a class="nav-link" href="teams.html">♢ Teams</a>
+        <a class="nav-link" href="inventory.html">▤ Inventory</a>
+
+        <div class="nav-section">ORGANIZATION</div>
+
+        <a class="nav-link active" href="employees.html">♙ Employees</a>
+        <a class="nav-link" href="reports.html">◫ Reports</a>
+        <a class="nav-link" href="notifications.html">◌ Notifications</a>
+        <a class="nav-link" href="chat.html">☵ Chat</a>
+
+        <div class="nav-section">SYSTEM</div>
+
+        <a class="nav-link" href="settings.html">⚙ Settings</a>
+
+        <a class="nav-link" href="#" onclick="logout(); return false;">
+            ↪ Logout
+        </a>
+
+    </aside>
+
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <button
+                class="btn secondary menu-toggle"
+                onclick="document.getElementById('sidebar').classList.toggle('open')"
+            >
+                ☰
+            </button>
+
+        </header>
+
+
+        <section class="content">
+
+            <div class="page-title">
+
+                <div>
+                    <span class="eyebrow">
+                        ORBIT / EMPLOYEES
+                    </span>
+
+                    <h1>
+                        Employees
+                    </h1>
+
+                    <p class="muted">
+                        Manage employees and organization access.
+                    </p>
+                </div>
+
+                <div class="employee-actions">
+                    <button
+                        class="btn primary"
+                        id="addEmployeeButton"
+                        type="button"
+                    >
+                        + Add Employee
+                    </button>
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="employee-toolbar">
+
+                    <input
+                        class="search"
+                        id="employeeSearch"
+                        placeholder="Search employees..."
+                    >
+
+                    <select id="statusFilter">
+                        <option value="">All statuses</option>
+                        <option value="ACTIVE">Active</option>
+                        <option value="INACTIVE">Inactive</option>
+                        <option value="PENDING">Pending</option>
+                    </select>
+
+                    <button
+                        class="btn secondary"
+                        id="exportButton"
+                        type="button"
+                    >
+                        Export
+                    </button>
+
+                </div>
+
+
+                <div class="table-wrap">
+
+                    <table class="table">
+
+                        <thead>
+
+                            <tr>
+                                 <th>Employee ID</th>
+                                 <th>Name</th>
+                                 <th>Email</th>
+                                 <th>Department</th>
+                                 <th>Designation</th>
+                                 <th>Role</th>
+                                 <th>Status</th>
+                                 <th>Joining Date</th>
+                                 <th>Actions</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="tableBody">
+
+                            <tr>
+                                <td colspan="9" class="empty-row">
+                                    Loading employees...
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<div id="toast" class="toast"></div>
+
+
+<!-- ADD EMPLOYEE MODAL -->
+
+<div
+    class="modal-overlay"
+    id="employeeModal"
+>
+
+    <div class="employee-modal">
+
+        <div class="modal-header">
+
+            <h2>
+                Add Employee
+            </h2>
+
+            <button
+                type="button"
+                class="modal-close"
+                id="closeEmployeeModal"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form
+            class="employee-form"
+            id="employeeForm"
+        >
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="employeeId">
+                        Employee ID
+                    </label>
+
+                    <input
+                        id="employeeId"
+                        name="employee_id"
+                        placeholder="EMP-006"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="employeeName">
+                        Full Name
+                    </label>
+
+                    <input
+                        id="employeeName"
+                        name="name"
+                        placeholder="Employee name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="employeeEmail">
+                        Email
+                    </label>
+
+                    <input
+                        id="employeeEmail"
+                        name="email"
+                        type="email"
+                        placeholder="employee@orbit.example"
+                        required
+                    >
+
+                </div>
+
+
+                
+<div class="form-group">
+    <label for="password">Password</label>
+    <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Enter password"
+        required
+    >
+</div>
+
+<div class="form-group">
+    <label for="confirm_password">Confirm Password</label>
+    <input
+        type="password"
+        id="confirm_password"
+        name="confirm_password"
+        placeholder="Re-enter password"
+        required
+    >
+    <small id="passwordError" style="color: #dc2626;"></small>
+</div>
+
+
+
+                <div class="form-group">
+
+                    <label for="employeeDepartment">
+                        Department
+                    </label>
+
+                    <input
+                        id="employeeDepartment"
+                        name="department"
+                        placeholder="Engineering"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="employeeDesignation">
+                        Designation
+                    </label>
+
+                    <input
+                        id="employeeDesignation"
+                        name="designation"
+                        placeholder="Software Engineer"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="employeeRole">
+                        Role
+                    </label>
+
+                    <select
+                        id="employeeRole"
+                        name="role"
+                    >
+                        <option value="EMPLOYEE">EMPLOYEE</option>
+                        <option value="MANAGER">MANAGER</option>
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="DIRECTOR">DIRECTOR</option>
+                        <option value="EXECUTIVE">EXECUTIVE</option>
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="employeeStatus">
+                        Status
+                    </label>
+
+                    <select
+                        id="employeeStatus"
+                        name="status"
+                    >
+                        <option value="ACTIVE">ACTIVE</option>
+                        <option value="PENDING">PENDING</option>
+                        <option value="INACTIVE">INACTIVE</option>
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="joiningDate">
+                        Joining Date
+                    </label>
+
+                    <input
+                        id="joiningDate"
+                        name="joining_date"
+                        type="date"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="form-error"
+                id="employeeFormError"
+            ></div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn secondary"
+                    id="cancelEmployeeButton"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn primary"
+                    id="saveEmployeeButton"
+                >
+                    Create Employee
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script src="../js/api.js"></script>
+<script src="../js/employees.js"></script>
+
+<script>
+function logout() {
+    localStorage.removeItem("orbit_token");
+    window.location.href = "../login.html";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Orbit System - Login</title>
+
+    <link rel="icon" href="data:,">
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/login.css">
+    
+</head>
+
+<body class="login-page">
+
+    <main class="login-shell">
+
+        <!-- ==================================================
+             Brand Panel
+        =================================================== -->
+
+        <section class="brand-panel">
+
+            <div class="orbit-mark" aria-hidden="true">
+                ◉
+            </div>
+
+            <h1>Orbit System</h1>
+
+            <p>
+                Enterprise project, people, inventory and
+                communication in one orbit.
+            </p>
+
+            <div
+                class="orbital"
+                aria-hidden="true">
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             Login Card
+        =================================================== -->
+
+        <section class="login-card">
+
+            <span class="eyebrow">
+                SECURE WORKSPACE
+            </span>
+
+            <h2>
+                Welcome back
+            </h2>
+
+            <p class="muted">
+                Sign in to continue to your workspace.
+            </p>
+
+
+            <!-- Login Form -->
+
+            <form
+                id="loginForm"
+                autocomplete="on"
+            >
+
+                <!-- Email -->
+
+                <label for="email">
+                    Email
+
+                    <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    autocomplete="username"
+                    placeholder="Email"
+>
+                </label>
+
+
+                <!-- Password -->
+
+                <label for="password">
+                    Password
+
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        required
+                        autocomplete="current-password"
+                        placeholder="Password"
+                    >
+                </label>
+
+
+                <!-- Remember / Forgot Password -->
+
+                <div class="row-between">
+
+                    <label class="check">
+
+                        <input
+                            type="checkbox"
+                            id="remember"
+                            name="remember"
+                        >
+
+                        <span>
+                            Remember me
+                        </span>
+
+                    </label>
+
+                    <a href="#">
+                        Forgot password?
+                    </a>
+
+                </div>
+
+
+                <!-- Submit -->
+
+                <button
+                    class="btn primary full"
+                    type="submit"
+                    id="loginButton"
+                >
+                    Sign in
+                    <span aria-hidden="true">→</span>
+                </button>
+
+
+                <!-- Login Error -->
+
+                <div
+                    id="loginError"
+                    class="error"
+                    role="alert"
+                    aria-live="polite"
+                ></div>
+
+            </form>
+        </section>
+
+    </main>
+
+
+    <!-- ======================================================
+         JavaScript
+         IMPORTANT: api.js must load BEFORE auth.js
+    ======================================================= -->
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+
+</body>
+
+</html>
+
+

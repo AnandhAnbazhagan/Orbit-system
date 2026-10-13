@@ -1,0 +1,796 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbit System - Notifications</title>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    
+
+    <style>
+        :root {
+            --notification-primary: #5b50d6;
+            --notification-primary-light: #f0efff;
+            --notification-border: #e7eaf1;
+            --notification-muted: #778197;
+            --notification-text: #202a3b;
+            --notification-surface: #ffffff;
+            --notification-bg: #f7f8fc;
+            --notification-danger: #c62828;
+        }
+
+        body {
+            background: var(--notification-bg);
+        }
+
+        .notification-page {
+            width: 100%;
+            max-width: 1450px;
+            margin: 0 auto;
+        }
+
+        .notification-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .notification-heading h1 {
+            margin: 7px 0;
+            color: var(--notification-text);
+            font-size: clamp(25px, 3vw, 32px);
+            font-weight: 750;
+        }
+
+        .notification-subtitle {
+            margin-top: 5px;
+            color: var(--notification-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .notification-heading-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .notification-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 40px;
+            padding: 10px 15px;
+            border: 1px solid var(--notification-border);
+            border-radius: 10px;
+            background: var(--notification-surface);
+            color: var(--notification-text);
+            font: inherit;
+            font-size: 13px;
+            font-weight: 650;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .notification-btn:hover:not(:disabled) {
+            border-color: #c7c2ff;
+            background: var(--notification-primary-light);
+        }
+
+        .notification-btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+
+        .notification-btn-primary {
+            background: var(--notification-primary);
+            color: white;
+            border-color: var(--notification-primary);
+        }
+
+        .notification-btn-primary:hover:not(:disabled) {
+            background: #4940bd;
+            color: white;
+        }
+
+        .notification-summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .notification-stat {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            min-width: 0;
+            padding: 23px;
+            overflow: hidden;
+            background: var(--notification-surface);
+            border: 1px solid var(--notification-border);
+            border-radius: 16px;
+            box-shadow: 0 3px 12px rgba(28, 37, 70, .025);
+        }
+
+        .notification-stat-icon {
+            display: grid;
+            place-items: center;
+            flex: 0 0 49px;
+            width: 49px;
+            height: 49px;
+            border-radius: 14px;
+            font-size: 23px;
+        }
+
+        .notification-stat-icon.total {
+            background: #eeecff;
+            color: #5b50d6;
+        }
+
+        .notification-stat-icon.unread {
+            background: #fff1df;
+            color: #d97706;
+        }
+
+        .notification-stat-icon.read {
+            background: #e4f8ee;
+            color: #16865b;
+        }
+
+        .notification-stat-label {
+            color: var(--notification-muted);
+            font-size: 13px;
+        }
+
+        .notification-stat-value {
+            display: block;
+            margin-top: 6px;
+            color: var(--notification-text);
+            font-size: 29px;
+            line-height: 1.2;
+            font-weight: 750;
+        }
+
+        .notification-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 17px;
+        }
+
+        .notification-toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .notification-section-title {
+            margin: 0;
+            color: var(--notification-text);
+            font-size: 17px;
+            font-weight: 750;
+        }
+
+        .notification-filters {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px;
+            background: #eceef5;
+            border-radius: 11px;
+        }
+
+        .notification-filter {
+            padding: 9px 15px;
+            border: 0;
+            border-radius: 8px;
+            background: transparent;
+            color: #657087;
+            font: inherit;
+            font-size: 13px;
+            font-weight: 650;
+            cursor: pointer;
+        }
+
+        .notification-filter.active {
+            background: white;
+            color: var(--notification-primary);
+            box-shadow: 0 2px 5px rgba(30, 40, 70, .08);
+        }
+
+        .notification-search-wrap {
+            position: relative;
+            width: min(100%, 280px);
+        }
+
+        .notification-search-icon {
+            position: absolute;
+            top: 50%;
+            left: 12px;
+            transform: translateY(-50%);
+            color: #8a94a7;
+            pointer-events: none;
+        }
+
+        .notification-search {
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 40px;
+            padding: 10px 12px 10px 36px;
+            border: 1px solid var(--notification-border);
+            border-radius: 10px;
+            outline: none;
+            background: white;
+            color: var(--notification-text);
+            font: inherit;
+            font-size: 13px;
+        }
+
+        .notification-search:focus {
+            border-color: #aaa3ff;
+            box-shadow: 0 0 0 3px rgba(91, 80, 214, .09);
+        }
+
+        .notification-status {
+            min-height: 20px;
+            margin: 0 0 12px;
+            color: var(--notification-muted);
+            font-size: 12px;
+        }
+
+        .notification-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .notification-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            min-width: 0;
+            padding: 20px;
+            border: 1px solid var(--notification-border);
+            border-radius: 15px;
+            background: var(--notification-surface);
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .notification-card:hover {
+            border-color: #d4d0ff;
+            box-shadow: 0 7px 22px rgba(32, 40, 70, .045);
+        }
+
+        .notification-card.unread {
+            border-left: 4px solid var(--notification-primary);
+            padding-left: 17px;
+            background: #fbfaff;
+        }
+
+        .notification-icon {
+            display: grid;
+            place-items: center;
+            flex: 0 0 46px;
+            width: 46px;
+            height: 46px;
+            border-radius: 13px;
+            font-size: 21px;
+        }
+
+        .notification-icon.project {
+            background: #eaf2ff;
+        }
+
+        .notification-icon.task {
+            background: #fff1df;
+        }
+
+        .notification-icon.inventory {
+            background: #e3f8ed;
+        }
+
+        .notification-icon.chat {
+            background: #f3e9ff;
+        }
+
+        .notification-icon.employee {
+            background: #e3f5f8;
+        }
+
+        .notification-icon.system {
+            background: #edf0f5;
+        }
+
+        .notification-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notification-title-row {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            flex-wrap: wrap;
+        }
+
+        .notification-title {
+            margin: 0;
+            color: var(--notification-text);
+            font-size: 15px;
+            font-weight: 750;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .notification-unread-dot {
+            flex: 0 0 8px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--notification-primary);
+        }
+
+        .notification-message {
+            margin: 7px 0 11px;
+            color: #657087;
+            font-size: 13px;
+            line-height: 1.75;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .notification-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            color: #8993a6;
+            font-size: 11px;
+        }
+
+        .notification-type-label {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: #f0efff;
+            color: #5b50d6;
+            font-weight: 650;
+        }
+
+        .notification-actions {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .notification-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            min-height: 34px;
+            padding: 7px 10px;
+            border: 1px solid var(--notification-border);
+            border-radius: 8px;
+            background: white;
+            color: #556176;
+            font: inherit;
+            font-size: 11px;
+            font-weight: 650;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .notification-action:hover {
+            border-color: #c7c2ff;
+            background: var(--notification-primary-light);
+            color: var(--notification-primary);
+        }
+
+        .notification-action.delete:hover {
+            border-color: #ffcaca;
+            background: #fff1f1;
+            color: var(--notification-danger);
+        }
+
+        .notification-state {
+            padding: 60px 20px;
+            text-align: center;
+            border: 1px dashed #dce1eb;
+            border-radius: 16px;
+            background: white;
+        }
+
+        .notification-state-icon {
+            display: grid;
+            place-items: center;
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 17px;
+            border-radius: 20px;
+            background: #f0efff;
+            font-size: 29px;
+        }
+
+        .notification-state h3 {
+            margin: 0 0 8px;
+            color: var(--notification-text);
+            font-size: 17px;
+        }
+
+        .notification-state p {
+            margin: 0;
+            color: var(--notification-muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .notification-pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .notification-pagination-info {
+            color: var(--notification-muted);
+            font-size: 12px;
+        }
+
+        .notification-pagination-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .notification-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 5px;
+            border-radius: 20px;
+            background: #e9e6ff;
+            color: #5145cd;
+            font-size: 10px;
+            font-weight: 750;
+        }
+
+        .notification-toast {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 9999;
+            max-width: min(420px, calc(100vw - 32px));
+            padding: 13px 18px;
+            border-radius: 11px;
+            background: #202a3b;
+            color: white;
+            box-shadow: 0 10px 35px rgba(20, 25, 45, .2);
+            font-size: 13px;
+            opacity: 0;
+            transform: translateY(12px);
+            pointer-events: none;
+            transition: .25s ease;
+        }
+
+        .notification-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .notification-toast.error {
+            background: #b42318;
+        }
+
+        @media (max-width: 1000px) {
+            .notification-summary {
+                gap: 12px;
+            }
+
+            .notification-stat {
+                padding: 17px;
+                gap: 12px;
+            }
+
+            .notification-stat-icon {
+                width: 42px;
+                height: 42px;
+                flex-basis: 42px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .notification-summary {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .notification-stat {
+                padding: 15px;
+            }
+
+            .notification-stat-value {
+                font-size: 24px;
+            }
+
+            .notification-heading {
+                align-items: flex-start;
+            }
+
+            .notification-heading-actions {
+                width: 100%;
+            }
+
+            .notification-toolbar {
+                align-items: flex-start;
+            }
+
+            .notification-toolbar-left {
+                width: 100%;
+            }
+
+            .notification-search-wrap {
+                width: 100%;
+            }
+
+            .notification-card {
+                padding: 14px;
+                gap: 11px;
+                flex-wrap: wrap;
+            }
+
+            .notification-card.unread {
+                padding-left: 11px;
+            }
+
+            .notification-icon {
+                width: 39px;
+                height: 39px;
+                flex-basis: 39px;
+            }
+
+            .notification-body {
+                flex: 1 1 calc(100% - 55px);
+            }
+
+            .notification-actions {
+                width: 100%;
+                padding-left: 50px;
+            }
+
+            .notification-state {
+                padding: 45px 15px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .notification-filters {
+                width: 100%;
+            }
+
+            .notification-filter {
+                flex: 1;
+                padding: 9px 8px;
+            }
+
+            .notification-actions {
+                padding-left: 0;
+            }
+
+            .notification-action {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">
+            <span class="logo-mark">◉</span>
+            Orbit system
+        </div>
+
+        <div class="nav-section">WORKSPACE</div>
+        <a class="nav-link" href="../dashboard.html">◉ Dashboard</a>
+        <a class="nav-link" href="projects.html">▣ Projects</a>
+        <a class="nav-link" href="tasks.html">✓ Tasks</a>
+        <a class="nav-link" href="teams.html">♢ Teams</a>
+        <a class="nav-link" href="inventory.html">▤ Inventory</a>
+
+        <div class="nav-section">ORGANIZATION</div>
+        <a class="nav-link" href="employees.html">♙ Employees</a>
+        <a class="nav-link" href="reports.html">◫ Reports</a>
+        <a class="nav-link active" href="notifications.html">
+            ◌ Notifications
+            <span id="sidebarUnread" class="notification-badge"
+                  style="margin-left:auto;display:none"></span>
+        </a>
+        <a class="nav-link" href="chat.html">☵ Chat</a>
+
+        <div class="nav-section">SYSTEM</div>
+        <a class="nav-link" href="settings.html">⚙ Settings</a>
+        <a class="nav-link" href="#" id="logoutButton">↪ Logout</a>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+            <button class="btn secondary menu-toggle" id="menuToggle"
+                    type="button" aria-label="Toggle navigation">☰</button>
+
+            <input class="search" id="workspaceSearch"
+                   type="search"
+                   placeholder="Search notifications..."
+                   aria-label="Search notifications">
+
+            <div class="profile">
+                <div class="avatar">O</div>
+            </div>
+        </header>
+
+        <!-- PAGE CONTENT -->
+        <section class="content notification-page">
+
+            <div class="notification-heading">
+                <div>
+                    <span class="eyebrow">ORBIT / ORGANIZATION</span>
+                    <h1>Notifications</h1>
+                    <p class="notification-subtitle">
+                        All your updates, reminders and activity in one place.
+                    </p>
+                </div>
+
+                <div class="notification-heading-actions">
+                    <button class="notification-btn" id="refreshButton"
+                            type="button">
+                        ↻ Refresh
+                    </button>
+
+                    <button class="notification-btn notification-btn-primary"
+                            id="markAllButton" type="button">
+                        ✓ Mark all as read
+                    </button>
+                </div>
+            </div>
+
+            <!-- STATISTICS -->
+            <div class="notification-summary">
+                <article class="notification-stat">
+                    <div class="notification-stat-icon total">▤</div>
+                    <div>
+                        <div class="notification-stat-label">
+                            Total notifications
+                        </div>
+                        <strong class="notification-stat-value"
+                                id="totalCount">—</strong>
+                    </div>
+                </article>
+
+                <article class="notification-stat">
+                    <div class="notification-stat-icon unread">◉</div>
+                    <div>
+                        <div class="notification-stat-label">
+                            Unread notifications
+                        </div>
+                        <strong class="notification-stat-value"
+                                id="unreadCount">—</strong>
+                    </div>
+                </article>
+
+                <article class="notification-stat">
+                    <div class="notification-stat-icon read">✓</div>
+                    <div>
+                        <div class="notification-stat-label">
+                            Read notifications
+                        </div>
+                        <strong class="notification-stat-value"
+                                id="readCount">—</strong>
+                    </div>
+                </article>
+            </div>
+
+            <!-- FILTERS -->
+            <div class="notification-toolbar">
+                <div class="notification-toolbar-left">
+                    <h2 class="notification-section-title">Recent activity</h2>
+
+                    <div class="notification-filters"
+                         role="group" aria-label="Notification filter">
+                        <button type="button"
+                                class="notification-filter active"
+                                data-filter="all"
+                                aria-pressed="true">All</button>
+
+                        <button type="button"
+                                class="notification-filter"
+                                data-filter="unread"
+                                aria-pressed="false">Unread</button>
+
+                        <button type="button"
+                                class="notification-filter"
+                                data-filter="read"
+                                aria-pressed="false">Read</button>
+                    </div>
+                </div>
+
+                <div class="notification-search-wrap">
+                    <span class="notification-search-icon">⌕</span>
+                    <input type="search"
+                           id="notificationSearch"
+                           class="notification-search"
+                           placeholder="Filter notifications..."
+                           aria-label="Filter notification content">
+                </div>
+            </div>
+
+            <div id="notificationStatus"
+                 class="notification-status"
+                 role="status"
+                 aria-live="polite"></div>
+
+            <!-- NOTIFICATIONS RENDER HERE -->
+            <div id="notifications" class="notification-list">
+                <div class="notification-state">
+                    <div class="notification-state-icon">◌</div>
+                    <h3>Loading notifications</h3>
+                    <p>Please wait while we retrieve your updates.</p>
+                </div>
+            </div>
+
+            <!-- PAGINATION -->
+            <div class="notification-pagination">
+                <span id="paginationInfo"
+                      class="notification-pagination-info"></span>
+
+                <div class="notification-pagination-actions">
+                    <button class="notification-btn" id="previousButton"
+                            type="button" disabled>
+                        ← Previous
+                    </button>
+
+                    <button class="notification-btn" id="nextButton"
+                            type="button" disabled>
+                        Next →
+                    </button>
+                </div>
+            </div>
+
+        </section>
+    </main>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="notification-toast"
+     role="status" aria-live="polite"></div>
+
+<!-- API + NOTIFICATION LOGIC -->
+<script src="../js/api.js"></script>
+<script src="../js/notifications.js"></script>
+
+</body>
+</html>

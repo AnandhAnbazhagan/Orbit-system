@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>Orbit System - Management Reports</title>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    
+
+    <style>
+
+        .report-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: end;
+            margin-bottom: 24px;
+        }
+
+        .report-filter {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 160px;
+        }
+
+        .report-filter label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748b;
+        }
+
+        .report-filter input,
+        .report-filter select {
+            height: 42px;
+            border: 1px solid #dbe2ea;
+            border-radius: 10px;
+            padding: 0 12px;
+            background: white;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .report-kpis {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .report-kpi {
+            background: white;
+            border: 1px solid #e6eaf0;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, .04);
+        }
+
+        .report-kpi-title {
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .report-kpi-value {
+            margin-top: 8px;
+            font-size: 30px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .report-kpi-sub {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .report-card {
+            background: white;
+            border: 1px solid #e6eaf0;
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, .04);
+            overflow: hidden;
+        }
+
+        .report-card.full {
+            grid-column: 1 / -1;
+        }
+
+        .report-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .report-card h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .report-card p {
+            margin: 5px 0 0;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        .report-table th {
+            text-align: left;
+            padding: 13px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #64748b;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+        }
+
+        .report-table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #eef2f7;
+            color: #334155;
+            font-size: 13px;
+        }
+
+        .report-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .status.active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status.low {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status.normal {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .report-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        @media (max-width: 1000px) {
+            .report-kpis {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .report-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .report-kpis {
+                grid-template-columns: 1fr;
+            }
+
+            .report-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .report-filter {
+                width: 100%;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="logo">
+            <span class="logo-mark">◉</span>
+            Orbit system
+        </div>
+
+        <div class="nav-section">WORKSPACE</div>
+
+        <a class="nav-link" href="../dashboard.html">◉ Dashboard</a>
+        <a class="nav-link" href="projects.html">▣ Projects</a>
+        <a class="nav-link" href="tasks.html">✓ Tasks</a>
+        <a class="nav-link" href="teams.html">♢ Teams</a>
+        <a class="nav-link" href="inventory.html">▤ Inventory</a>
+
+        <div class="nav-section">ORGANIZATION</div>
+
+        <a class="nav-link" href="employees.html">♙ Employees</a>
+        <a class="nav-link active" href="reports.html">◫ Reports</a>
+        <a class="nav-link" href="notifications.html">◌ Notifications</a>
+        <a class="nav-link" href="chat.html">☵ Chat</a>
+
+        <div class="nav-section">SYSTEM</div>
+
+        <a class="nav-link" href="settings.html">⚙ Settings</a>
+
+        <a
+            class="nav-link"
+            href="#"
+            onclick="logout()"
+        >
+            ↪ Logout
+        </a>
+
+    </aside>
+
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <button
+                class="btn secondary menu-toggle"
+                onclick="document.getElementById('sidebar').classList.toggle('open')"
+            >
+                ☰
+            </button>
+
+        </header>
+
+
+        <section class="content">
+
+            <div class="page-title">
+
+                <div>
+                    <span class="eyebrow">
+                        ORBIT / MANAGEMENT
+                    </span>
+
+                    <h1>
+                        Management Reports
+                    </h1>
+
+                    <p class="muted">
+                        Workforce, projects, tasks and inventory performance.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- Filters -->
+
+            <div class="report-card">
+
+                <div class="report-toolbar">
+
+                    <div class="report-filter">
+
+                        <label>
+                            From
+                        </label>
+
+                        <input
+                            type="date"
+                            id="fromDate"
+                        >
+
+                    </div>
+
+
+                    <div class="report-filter">
+
+                        <label>
+                            To
+                        </label>
+
+                        <input
+                            type="date"
+                            id="toDate"
+                        >
+
+                    </div>
+
+
+                    <div class="report-filter">
+
+                        <label>
+                            Department
+                        </label>
+
+                        <select id="departmentFilter">
+
+                            <option value="">
+                                All Departments
+                            </option>
+
+                            <option>
+                                Engineering
+                            </option>
+
+                            <option>
+                                Operations
+                            </option>
+
+                            <option>
+                                Administration
+                            </option>
+
+                            <option>
+                                Finance
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="report-filter">
+
+                        <label>
+                            Status
+                        </label>
+
+                        <select id="statusFilter">
+
+                            <option value="">
+                                All Status
+                            </option>
+
+                            <option value="ACTIVE">
+                                Active
+                            </option>
+
+                            <option value="PENDING">
+                                Pending
+                            </option>
+
+                            <option value="COMPLETED">
+                                Completed
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="report-actions">
+
+                        <button
+                            class="btn primary"
+                            onclick="loadReports()"
+                        >
+                            Apply
+                        </button>
+
+                        <button
+                            class="btn secondary"
+                            onclick="window.print()"
+                        >
+                            Print
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- KPI -->
+
+            <div class="report-kpis">
+
+                <div class="report-kpi">
+
+                    <div class="report-kpi-title">
+                        Total Employees
+                    </div>
+
+                    <div
+                        class="report-kpi-value"
+                        id="totalEmployees"
+                    >
+                        0
+                    </div>
+
+                    <div class="report-kpi-sub">
+                        Organization workforce
+                    </div>
+
+                </div>
+
+
+                <div class="report-kpi">
+
+                    <div class="report-kpi-title">
+                        Active Projects
+                    </div>
+
+                    <div
+                        class="report-kpi-value"
+                        id="activeProjects"
+                    >
+                        0
+                    </div>
+
+                    <div class="report-kpi-sub">
+                        Currently active
+                    </div>
+
+                </div>
+
+
+                <div class="report-kpi">
+
+                    <div class="report-kpi-title">
+                        Pending Tasks
+                    </div>
+
+                    <div
+                        class="report-kpi-value"
+                        id="pendingTasks"
+                    >
+                        0
+                    </div>
+
+                    <div class="report-kpi-sub">
+                        Work requiring attention
+                    </div>
+
+                </div>
+
+
+                <div class="report-kpi">
+
+                    <div class="report-kpi-title">
+                        Low Stock Items
+                    </div>
+
+                    <div
+                        class="report-kpi-value"
+                        id="lowStock"
+                    >
+                        0
+                    </div>
+
+                    <div class="report-kpi-sub">
+                        Inventory alerts
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Reports -->
+
+            <div class="report-grid">
+
+
+                <!-- Employee -->
+
+                <div class="report-card full">
+
+                    <div class="report-card-header">
+
+                        <div>
+
+                            <h2>
+                                Employee Report
+                            </h2>
+
+                            <p>
+                                Workforce overview
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="table-wrap">
+
+                        <table class="report-table">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Department</th>
+                                    <th>Status</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="employeeReport">
+
+                                <tr>
+                                    <td colspan="5">
+                                        Loading...
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Project -->
+
+                <div class="report-card">
+
+                    <div class="report-card-header">
+
+                        <div>
+
+                            <h2>
+                                Project Performance
+                            </h2>
+
+                            <p>
+                                Current project portfolio
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="table-wrap">
+
+                        <table class="report-table">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Project</th>
+                                    <th>Status</th>
+                                    <th>Progress</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="projectReport">
+
+                                <tr>
+                                    <td colspan="3">
+                                        Loading...
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Task -->
+
+                <div class="report-card">
+
+                    <div class="report-card-header">
+
+                        <div>
+
+                            <h2>
+                                Task Performance
+                            </h2>
+
+                            <p>
+                                Task status overview
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="table-wrap">
+
+                        <table class="report-table">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Task</th>
+                                    <th>Status</th>
+                                    <th>Priority</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="taskReport">
+
+                                <tr>
+                                    <td colspan="3">
+                                        Loading...
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Inventory -->
+
+                <div class="report-card full">
+
+                    <div class="report-card-header">
+
+                        <div>
+
+                            <h2>
+                                Inventory Report
+                            </h2>
+
+                            <p>
+                                Stock health and availability
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="table-wrap">
+
+                        <table class="report-table">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Item</th>
+                                    <th>SKU</th>
+                                    <th>Quantity</th>
+                                    <th>Minimum</th>
+                                    <th>Status</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="inventoryReport">
+
+                                <tr>
+                                    <td colspan="5">
+                                        Loading...
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="report-footer">
+
+                <span>
+                    Last updated:
+                    <span id="lastUpdated">—</span>
+                </span>
+
+                <span>
+                    Orbit System • Management Reporting
+                </span>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<div id="toast" class="toast"></div>
+
+
+<script src="../js/api.js"></script>
+<script src="../js/reports.js"></script>
+
+<script>
+
+function logout() {
+    localStorage.removeItem("orbit_token");
+    window.location.href = "../login.html";
+}
+
+</script>
+
+</body>
+</html>

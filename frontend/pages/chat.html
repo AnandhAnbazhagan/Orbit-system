@@ -1,0 +1,1023 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Orbit System - Chat</title>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    
+
+    <style>
+        :root {
+            --chat-primary: #6757e8;
+            --chat-primary-dark: #5141ce;
+            --chat-bg: #f5f6fb;
+            --chat-border: #e7e9f2;
+            --chat-text: #20243a;
+            --chat-muted: #8a90a5;
+            --chat-green: #dcf8c6;
+        }
+
+        .chat-page,
+        .chat-page * {
+            box-sizing: border-box;
+        }
+
+        .chat-page {
+            min-width: 0;
+        }
+
+        .chat-page .content {
+            padding: 22px;
+        }
+
+        .chat-page-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .chat-page-title h1 {
+            margin: 5px 0;
+        }
+
+        .chat-page-title p {
+            margin: 5px 0 0;
+            color: var(--chat-muted);
+            font-size: 13px;
+        }
+
+        .chat-shell {
+            display: grid;
+            grid-template-columns: 300px minmax(0, 1fr);
+            height: min(740px, calc(100vh - 205px));
+            min-height: 470px;
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid var(--chat-border);
+            border-radius: 18px;
+            box-shadow: 0 8px 35px rgba(28, 32, 70, .06);
+        }
+
+        .chat-sidebar {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            min-height: 0;
+            border-right: 1px solid var(--chat-border);
+            background: #fff;
+        }
+
+        .chat-sidebar-header {
+            padding: 18px 16px 12px;
+        }
+
+        .chat-sidebar-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .chat-sidebar-title h2 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        .chat-header-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .chat-icon-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            border: 1px solid var(--chat-border);
+            border-radius: 10px;
+            background: #fff;
+            color: var(--chat-primary);
+            cursor: pointer;
+            font-size: 18px;
+            transition: background .2s, border-color .2s;
+        }
+
+        .chat-icon-button:hover {
+            background: #f0eeff;
+            border-color: #d6d0ff;
+        }
+
+        .chat-icon-button:focus-visible,
+        .chat-filter:focus-visible,
+        .chat-send-button:focus-visible {
+            outline: 3px solid #6757e850;
+            outline-offset: 2px;
+        }
+
+        .chat-search-wrap {
+            position: relative;
+        }
+
+        .chat-search-wrap input {
+            width: 100%;
+            min-width: 0;
+            padding: 11px 13px 11px 36px;
+            border: 1px solid var(--chat-border);
+            border-radius: 10px;
+            outline: none;
+            background: var(--chat-bg);
+            color: var(--chat-text);
+            font-size: 13px;
+        }
+
+        .chat-search-wrap input:focus {
+            border-color: var(--chat-primary);
+            box-shadow: 0 0 0 3px #6757e815;
+        }
+
+        .chat-search-icon {
+            position: absolute;
+            top: 50%;
+            left: 12px;
+            transform: translateY(-50%);
+            color: var(--chat-muted);
+            pointer-events: none;
+        }
+
+        .chat-filter-row {
+            display: flex;
+            gap: 7px;
+            padding: 0 16px 12px;
+        }
+
+        .chat-filter {
+            padding: 7px 12px;
+            border: 0;
+            border-radius: 18px;
+            background: var(--chat-bg);
+            color: #626880;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .chat-filter.active {
+            background: #ece9ff;
+            color: var(--chat-primary-dark);
+            font-weight: 600;
+        }
+
+        .chat-conversation-list {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            padding: 0 8px 10px;
+        }
+
+        .chat-conversation-item {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 11px;
+            padding: 12px 10px;
+            border: 0;
+            border-radius: 12px;
+            background: transparent;
+            text-align: left;
+            cursor: pointer;
+            color: var(--chat-text);
+        }
+
+        .chat-conversation-item:hover {
+            background: #f7f7fc;
+        }
+
+        .chat-conversation-item.active {
+            background: #efedff;
+        }
+
+        .chat-avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 43px;
+            height: 43px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7869f3, #a29afc);
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .chat-avatar.group {
+            background: linear-gradient(135deg, #18a98c, #5bcbb1);
+        }
+
+        .chat-conversation-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-conversation-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chat-conversation-name {
+            overflow: hidden;
+            color: #242840;
+            font-size: 13px;
+            font-weight: 650;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .chat-conversation-time {
+            flex-shrink: 0;
+            color: var(--chat-muted);
+            font-size: 10px;
+        }
+
+        .chat-conversation-preview {
+            display: block;
+            margin-top: 5px;
+            overflow: hidden;
+            color: var(--chat-muted);
+            font-size: 12px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .chat-unread {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            margin-top: 4px;
+            padding: 0 5px;
+            border-radius: 10px;
+            background: var(--chat-primary);
+            color: white;
+            font-size: 10px;
+        }
+
+        .chat-empty {
+            padding: 28px 12px;
+            color: var(--chat-muted);
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .chat-main {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            min-height: 0;
+            background: #f9faff;
+        }
+
+        .chat-main-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 75px;
+            padding: 13px 18px;
+            border-bottom: 1px solid var(--chat-border);
+            background: #fff;
+        }
+
+        .chat-active-info {
+            min-width: 0;
+        }
+
+        .chat-active-name {
+            margin: 0;
+            overflow-wrap: anywhere;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--chat-text);
+        }
+
+        .chat-active-status {
+            display: block;
+            margin-top: 4px;
+            color: var(--chat-muted);
+            font-size: 11px;
+        }
+
+        .chat-header-spacer {
+            flex: 1;
+        }
+
+        .chat-back-button {
+            display: none;
+        }
+
+        .chat-message-area {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            min-height: 0;
+            gap: 12px;
+            overflow-y: auto;
+            padding: 22px;
+            background-color: #f7f8fc;
+            background-image: radial-gradient(#e5e8f1 .7px, transparent .7px);
+            background-size: 19px 19px;
+        }
+
+        .chat-date-divider {
+            align-self: center;
+            padding: 7px 12px;
+            border: 1px solid #eceef5;
+            border-radius: 8px;
+            background: #fff;
+            color: #7d8297;
+            font-size: 10px;
+        }
+
+        .chat-message {
+            display: flex;
+            width: 100%;
+        }
+
+        .chat-message.mine {
+            justify-content: flex-end;
+        }
+
+        .chat-message.other {
+            justify-content: flex-start;
+        }
+
+        .chat-bubble {
+            max-width: min(76%, 480px);
+            padding: 10px 12px 7px;
+            border: 1px solid #e9eaf2;
+            border-radius: 13px 13px 13px 4px;
+            background: #fff;
+            color: #30334b;
+            box-shadow: 0 2px 5px #1c244008;
+            overflow-wrap: anywhere;
+        }
+
+        .chat-message.mine .chat-bubble {
+            border-color: #d7eec6;
+            border-radius: 13px 13px 4px 13px;
+            background: var(--chat-green);
+        }
+
+        .chat-sender-name {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--chat-primary-dark);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .chat-message-text {
+            font-size: 13px;
+            line-height: 1.55;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .chat-message-meta {
+            display: flex;
+            justify-content: flex-end;
+            gap: 5px;
+            margin-top: 5px;
+            color: #7f8794;
+            font-size: 9px;
+        }
+
+        .chat-attachment-link {
+            display: inline-block;
+            color: var(--chat-primary-dark);
+            font-size: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .chat-attachment-image {
+            display: block;
+            max-width: min(240px, 100%);
+            max-height: 240px;
+            margin-top: 7px;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
+        .chat-compose-area {
+            padding: 13px 15px;
+            border-top: 1px solid var(--chat-border);
+            background: #fff;
+        }
+
+        .chat-attachment-preview {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 8px 10px;
+            border-radius: 9px;
+            background: #f0eeff;
+            color: var(--chat-primary-dark);
+            font-size: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .chat-compose-form {
+            display: flex;
+            align-items: flex-end;
+            gap: 9px;
+        }
+
+        .chat-attach-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 40px;
+            height: 42px;
+            border: 1px solid var(--chat-border);
+            border-radius: 11px;
+            color: #737990;
+            cursor: pointer;
+            font-size: 19px;
+        }
+
+        .chat-attach-label:hover {
+            background: #f2f0ff;
+            color: var(--chat-primary);
+        }
+
+        .chat-compose-input {
+            flex: 1;
+            min-width: 0;
+            min-height: 42px;
+            max-height: 120px;
+            resize: vertical;
+            padding: 12px 14px;
+            border: 1px solid var(--chat-border);
+            border-radius: 11px;
+            outline: none;
+            background: #f9faff;
+            color: var(--chat-text);
+            font: inherit;
+            font-size: 13px;
+        }
+
+        .chat-compose-input:focus {
+            border-color: var(--chat-primary);
+        }
+
+        .chat-compose-input:disabled {
+            cursor: not-allowed;
+            opacity: .7;
+        }
+
+        .chat-send-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 43px;
+            height: 42px;
+            border: 0;
+            border-radius: 11px;
+            background: var(--chat-primary);
+            color: #fff;
+            cursor: pointer;
+            font-size: 17px;
+        }
+
+        .chat-send-button:hover {
+            background: var(--chat-primary-dark);
+        }
+
+        .chat-send-button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .chat-dialog {
+            width: min(480px, calc(100% - 28px));
+            max-height: 85vh;
+            overflow: auto;
+            padding: 0;
+            border: 1px solid var(--chat-border);
+            border-radius: 18px;
+            background: #fff;
+            color: var(--chat-text);
+            box-shadow: 0 25px 80px #0f172a35;
+        }
+
+        .chat-dialog::backdrop {
+            background: #10132b80;
+            backdrop-filter: blur(3px);
+        }
+
+        .chat-dialog-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 22px;
+        }
+
+        .chat-dialog-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .chat-dialog-header h2 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        .chat-field-label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+        .chat-field {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid var(--chat-border);
+            border-radius: 10px;
+            outline: none;
+            background: #fff;
+            color: var(--chat-text);
+            font: inherit;
+            font-size: 13px;
+        }
+
+        .chat-field:focus {
+            border-color: var(--chat-primary);
+        }
+
+        .employee-picker {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .employee-option {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 10px;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .employee-option:hover {
+            background: #f6f5ff;
+        }
+
+        .employee-option input {
+            width: 17px;
+            height: 17px;
+            accent-color: var(--chat-primary);
+        }
+
+        .employee-option-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .employee-option-name {
+            display: block;
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        .employee-option-email {
+            display: block;
+            margin-top: 3px;
+            color: var(--chat-muted);
+            font-size: 11px;
+            overflow-wrap: anywhere;
+        }
+
+        .chat-dialog-hint {
+            margin: 0;
+            color: var(--chat-muted);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .chat-dialog-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 9px;
+            padding-top: 8px;
+        }
+
+        .chat-dialog-actions button {
+            padding: 10px 15px;
+            border: 0;
+            border-radius: 9px;
+            cursor: pointer;
+            font: inherit;
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+        .chat-btn-secondary {
+            background: #f0f1f7;
+            color: #555b72;
+        }
+
+        .chat-btn-primary {
+            background: var(--chat-primary);
+            color: #fff;
+        }
+
+        .chat-btn-primary:disabled {
+            opacity: .6;
+            cursor: wait;
+        }
+
+        .chat-toast {
+            position: fixed;
+            z-index: 9999;
+            right: 22px;
+            bottom: 22px;
+            max-width: calc(100% - 44px);
+            padding: 13px 18px;
+            border-radius: 11px;
+            background: #242840;
+            color: #fff;
+            box-shadow: 0 10px 35px #11152b30;
+            font-size: 13px;
+        }
+
+        .chat-toast.error {
+            background: #b42336;
+        }
+
+        .chat-toast[hidden],
+        #groupNameField[hidden],
+        #attachmentPreview[hidden] {
+            display: none !important;
+        }
+
+        @media (max-width: 1050px) {
+            .chat-shell {
+                grid-template-columns: 270px minmax(0, 1fr);
+            }
+        }
+
+        @media (max-width: 760px) {
+            .chat-page .content {
+                padding: 12px;
+            }
+
+            .chat-shell {
+                grid-template-columns: minmax(0, 1fr);
+                height: calc(100dvh - 190px);
+                min-height: 420px;
+            }
+
+            .chat-shell.mobile-chat-open .chat-sidebar {
+                display: none;
+            }
+
+            .chat-shell:not(.mobile-chat-open) .chat-main {
+                display: none;
+            }
+
+            .chat-back-button {
+                display: inline-flex;
+            }
+
+            .chat-message-area {
+                padding: 14px 10px;
+            }
+
+            .chat-bubble {
+                max-width: 88%;
+            }
+
+            .chat-sidebar-header {
+                padding: 14px 12px 10px;
+            }
+
+            .chat-filter-row {
+                padding-right: 12px;
+                padding-left: 12px;
+            }
+
+            .chat-compose-area {
+                padding: 10px;
+            }
+
+            .chat-page-title {
+                margin-bottom: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="app">
+
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">
+            <span class="logo-mark">◉</span>
+            Orbit system
+        </div>
+
+        <div class="nav-section">WORKSPACE</div>
+        <a class="nav-link" href="../dashboard.html">◉ Dashboard</a>
+        <a class="nav-link" href="projects.html">▣ Projects</a>
+        <a class="nav-link" href="tasks.html">✓ Tasks</a>
+        <a class="nav-link" href="teams.html">♢ Teams</a>
+        <a class="nav-link" href="inventory.html">▤ Inventory</a>
+
+        <div class="nav-section">ORGANIZATION</div>
+        <a class="nav-link" href="employees.html">♙ Employees</a>
+        <a class="nav-link" href="reports.html">◫ Reports</a>
+        <a class="nav-link" href="notifications.html">◌ Notifications</a>
+        <a class="nav-link active" href="chat.html">☵ Chat</a>
+
+        <div class="nav-section">SYSTEM</div>
+        <a class="nav-link" href="settings.html">⚙ Settings</a>
+        <a class="nav-link" href="#" id="logoutButton">↪ Logout</a>
+    </aside>
+
+    <main class="main chat-page">
+        <header class="topbar">
+            <button
+                type="button"
+                class="btn secondary menu-toggle"
+                id="sidebarToggle"
+                aria-label="Toggle navigation">
+                ☰
+            </button>
+
+            <div style="flex:1"></div>
+
+            <div class="profile">
+                <div class="avatar" id="headerAvatar">O</div>
+                <span id="headerEmployeeName">Orbit User</span>
+            </div>
+        </header>
+
+        <section class="content">
+            <div class="chat-page-title">
+                <div>
+                    <span class="eyebrow">ORBIT / COMMUNICATION</span>
+                    <h1>Chat</h1>
+                    <p>Connect with employees and project teams.</p>
+                </div>
+            </div>
+
+            <div class="chat-shell" id="chatShell">
+
+                <aside class="chat-sidebar">
+                    <div class="chat-sidebar-header">
+                        <div class="chat-sidebar-title">
+                            <h2>Chats</h2>
+
+                            <div class="chat-header-actions">
+                                <button
+                                    type="button"
+                                    class="chat-icon-button"
+                                    id="newChatButton"
+                                    title="Start a private chat"
+                                    aria-label="New chat">+</button>
+
+                                <button
+                                    type="button"
+                                    class="chat-icon-button"
+                                    id="newGroupButton"
+                                    title="Create a group"
+                                    aria-label="New group">♧</button>
+                            </div>
+                        </div>
+
+                        <div class="chat-search-wrap">
+                            <span class="chat-search-icon" aria-hidden="true">⌕</span>
+                            <input
+                                type="search"
+                                id="conversationSearch"
+                                placeholder="Search conversations..."
+                                aria-label="Search conversations">
+                        </div>
+                    </div>
+
+                    <div class="chat-filter-row" aria-label="Conversation filters">
+                        <button type="button"
+                                class="chat-filter active"
+                                data-filter="ALL">All</button>
+                        <button type="button"
+                                class="chat-filter"
+                                data-filter="DIRECT">Private</button>
+                        <button type="button"
+                                class="chat-filter"
+                                data-filter="GROUP">Groups</button>
+                    </div>
+
+                    <div
+                        class="chat-conversation-list"
+                        id="conversationList"
+                        aria-live="polite">
+                        <div class="chat-empty">Loading conversations...</div>
+                    </div>
+                </aside>
+
+                <section class="chat-main" aria-label="Current conversation">
+                    <header class="chat-main-header">
+                        <button
+                            type="button"
+                            class="chat-icon-button chat-back-button"
+                            id="backToChatsButton"
+                            aria-label="Back to conversations">←</button>
+
+                        <div class="chat-avatar" id="activeChatAvatar">O</div>
+
+                        <div class="chat-active-info">
+                            <h2 class="chat-active-name" id="chatTitle">
+                                Select a conversation
+                            </h2>
+                            <span class="chat-active-status" id="chatStatus">
+                                Your Orbit conversations
+                            </span>
+                        </div>
+
+                        <div class="chat-header-spacer"></div>
+
+                        <button
+                            type="button"
+                            class="chat-icon-button"
+                            id="refreshChatsButton"
+                            title="Refresh messages"
+                            aria-label="Refresh messages">↻</button>
+                    </header>
+
+                    <div
+                        class="chat-message-area"
+                        id="messages"
+                        aria-live="polite"
+                        aria-label="Messages">
+                        <div class="chat-empty">
+                            Select a conversation or start a new chat.
+                        </div>
+                    </div>
+
+                    <div class="chat-compose-area">
+                        <div
+                            id="attachmentPreview"
+                            class="chat-attachment-preview"
+                            hidden>
+                            <span id="attachmentPreviewName"></span>
+                            <button
+                                type="button"
+                                class="chat-icon-button"
+                                id="removeAttachmentButton"
+                                aria-label="Remove attachment">×</button>
+                        </div>
+
+                        <form class="chat-compose-form" id="messageForm">
+                            <label
+                                class="chat-attach-label"
+                                for="attachmentInput"
+                                title="Attach an image or document"
+                                aria-label="Attach file">📎</label>
+
+                            <input
+                                type="file"
+                                id="attachmentInput"
+                                accept="image/jpeg,image/png,image/gif,image/webp,application/pdf,text/plain,.doc,.docx,.xls,.xlsx"
+                                hidden>
+
+                            <textarea
+                                class="chat-compose-input"
+                                id="messageInput"
+                                rows="1"
+                                placeholder="Write a message..."
+                                aria-label="Message"
+                                disabled></textarea>
+
+                            <button
+                                class="chat-send-button"
+                                id="sendButton"
+                                type="submit"
+                                title="Send message"
+                                aria-label="Send message"
+                                disabled>➤</button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </main>
+</div>
+
+<dialog id="newChatDialog" class="chat-dialog">
+    <form class="chat-dialog-form" id="newChatForm">
+        <div class="chat-dialog-header">
+            <h2 id="newChatHeading">New Chat</h2>
+
+            <button
+                type="button"
+                class="chat-icon-button"
+                id="closeChatDialogButton"
+                aria-label="Close dialog">✕</button>
+        </div>
+
+        <div id="groupNameField" hidden>
+            <label class="chat-field-label" for="newChatTitle">
+                Group name
+            </label>
+            <input
+                class="chat-field"
+                id="newChatTitle"
+                type="text"
+                maxlength="100"
+                placeholder="e.g. Development Team">
+        </div>
+
+        <div>
+            <label class="chat-field-label" for="employeeSearch">
+                Select employees
+            </label>
+            <input
+                class="chat-field"
+                id="employeeSearch"
+                type="search"
+                placeholder="Search employees by name">
+        </div>
+
+        <div class="employee-picker" id="employeePicker">
+            <p class="chat-empty">Loading employees...</p>
+        </div>
+
+        <p class="chat-dialog-hint" id="chatSelectionHint">
+            Select one employee to start a private chat.
+        </p>
+
+        <div class="chat-dialog-actions">
+            <button
+                type="button"
+                class="chat-btn-secondary"
+                id="cancelChatDialogButton">Cancel</button>
+
+            <button
+                type="submit"
+                class="chat-btn-primary"
+                id="createChatButton">Start Chat</button>
+        </div>
+    </form>
+</dialog>
+
+<div id="toast" class="chat-toast" role="status" hidden></div>
+
+<script src="../js/api.js"></script>
+<script src="../js/chat.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const sidebar = document.getElementById("sidebar");
+        const sidebarToggle = document.getElementById("sidebarToggle");
+        const logoutButton = document.getElementById("logoutButton");
+
+        sidebarToggle?.addEventListener("click", () => {
+            sidebar?.classList.toggle("open");
+        });
+
+        logoutButton?.addEventListener("click", event => {
+            event.preventDefault();
+
+            localStorage.removeItem("orbit_token");
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("token");
+
+            window.location.href = "../login.html";
+        });
+    });
+</script>
+
+</body>
+</html>

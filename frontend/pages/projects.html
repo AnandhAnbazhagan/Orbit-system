@@ -1,0 +1,1025 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Orbit System - Projects</title>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    
+
+    <style>
+        /* =====================================================
+           PROJECT PAGE
+        ===================================================== */
+
+        .project-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .project-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .project-toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            flex-wrap: wrap;
+        }
+
+        .project-search {
+            min-width: 260px;
+        }
+
+        .status-select {
+            min-width: 160px;
+        }
+
+        /* =====================================================
+           STATUS AND PRIORITY BADGES
+        ===================================================== */
+
+        .status-badge,
+        .priority-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status-planned {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        .status-in-progress {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .status-on-hold {
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+        .status-completed {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .status-cancelled {
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .priority-low {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .priority-medium {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .priority-high {
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+        .priority-critical,
+        .priority-urgent {
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        /* =====================================================
+           PROJECT NAME AND DESCRIPTION
+        ===================================================== */
+
+        .project-name {
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .project-description {
+            margin-top: 4px;
+            max-width: 280px;
+            color: #64748b;
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* =====================================================
+           PROGRESS
+        ===================================================== */
+
+        .project-progress {
+            min-width: 130px;
+        }
+
+        .project-progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 7px;
+            background: #e5e7eb;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            background: #6366f1;
+            border-radius: 999px;
+            transition: width .3s ease;
+        }
+
+        
+.progress-edit-field {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.progress-edit-field input[type="range"] {
+    flex: 1;
+    accent-color: #6366f1;
+}
+
+#editProjectProgressValue {
+    min-width: 44px;
+    font-weight: 700;
+    color: #4f46e5;
+    text-align: right;
+}
+
+
+/* Project progress percentage */
+.project-progress {
+    min-width: 120px;
+    width: 100%;
+}
+
+.project-progress-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 7px;
+}
+
+.project-progress-label {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.project-progress-value {
+    color: #4338ca;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.project-progress-track {
+    width: 100%;
+    height: 7px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #e2e8f0;
+}
+
+.project-progress-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    transition: width 0.3s ease;
+}
+
+
+        /* =====================================================
+           MODAL
+        ===================================================== */
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(15, 23, 42, .60);
+            z-index: 9999;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .project-modal {
+            width: min(720px, 100%);
+            max-height: 90vh;
+            overflow-y: auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, .20);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 22px 24px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 21px;
+            color: #111827;
+        }
+
+        .modal-header p {
+            margin: 5px 0 0;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .modal-close {
+            width: 35px;
+            height: 35px;
+            flex-shrink: 0;
+            border: 0;
+            border-radius: 8px;
+            background: #f1f5f9;
+            color: #64748b;
+            font-size: 23px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            background: #e2e8f0;
+            color: #111827;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            min-width: 0;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px 12px;
+            border: 1px solid #dbe1e8;
+            border-radius: 9px;
+            background: #fff;
+            color: #111827;
+            font: inherit;
+            outline: none;
+        }
+
+        .form-group textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, .10);
+        }
+
+        .form-hint {
+            font-size: 11px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 18px 24px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-footer button:disabled {
+            opacity: .65;
+            cursor: not-allowed;
+        }
+
+        /* =====================================================
+           TABLE
+        ===================================================== */
+
+        .table-message {
+            padding: 40px 20px !important;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .error-message {
+            color: #b91c1c !important;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        /* =====================================================
+           TOAST
+        ===================================================== */
+
+        #toast {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 20000;
+            min-width: 250px;
+            max-width: min(420px, calc(100vw - 32px));
+            padding: 13px 17px;
+            border-radius: 10px;
+            background: #1e293b;
+            color: #fff;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, .18);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(15px);
+            transition: .25s ease;
+            overflow-wrap: anywhere;
+        }
+
+        #toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        #toast.success {
+            background: #15803d;
+        }
+
+        #toast.error {
+            background: #dc2626;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 700px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .project-toolbar-left {
+                width: 100%;
+            }
+
+            .project-search,
+            .status-select {
+                width: 100%;
+                min-width: 100%;
+            }
+
+            .project-toolbar > .btn {
+                width: 100%;
+            }
+
+            .modal-footer {
+                flex-direction: column-reverse;
+            }
+
+            .modal-footer .btn {
+                width: 100%;
+            }
+
+            .modal-header,
+            .modal-body,
+            .modal-footer {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+
+            .project-actions {
+                width: 100%;
+            }
+
+            .project-actions .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="logo">
+            <span class="logo-mark">◉</span>
+            Orbit System
+        </div>
+
+        <div class="nav-section">WORKSPACE</div>
+
+        <a class="nav-link" href="../dashboard.html">◉ Dashboard</a>
+        <a class="nav-link active" href="projects.html">▣ Projects</a>
+        <a class="nav-link" href="tasks.html">✓ Tasks</a>
+        <a class="nav-link" href="teams.html">♢ Teams</a>
+        <a class="nav-link" href="inventory.html">▤ Inventory</a>
+
+        <div class="nav-section">ORGANIZATION</div>
+
+        <a class="nav-link" href="employees.html">♙ Employees</a>
+        <a class="nav-link" href="reports.html">◫ Reports</a>
+        <a class="nav-link" href="notifications.html">◌ Notifications</a>
+        <a class="nav-link" href="chat.html">☵ Chat</a>
+
+        <div class="nav-section">SYSTEM</div>
+
+        <a class="nav-link" href="settings.html">⚙ Settings</a>
+
+        <a class="nav-link" href="#" id="logoutLink">↪ Logout</a>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <header class="topbar">
+
+            <button
+                class="btn secondary menu-toggle"
+                id="menuToggle"
+                type="button"
+                aria-label="Toggle sidebar"
+            >☰</button>
+
+            <span class="topbar-title">Executive Workspace</span>
+
+            <div class="profile">
+                <div class="avatar">O</div>
+            </div>
+
+        </header>
+
+        <section class="content">
+
+            <!-- PAGE HEADER -->
+            <div class="page-title">
+
+                <div>
+                    <span class="eyebrow">ORBIT / PROJECTS</span>
+                    <h1>Projects</h1>
+                </div>
+
+                <div class="project-actions">
+                    <button
+                        class="btn primary"
+                        id="openProjectButton"
+                        type="button"
+                    >+ Add Project</button>
+                </div>
+
+            </div>
+
+            <!-- PROJECT TABLE -->
+            <div class="card">
+
+                <div class="project-toolbar">
+
+                    <div class="project-toolbar-left">
+
+                        <input
+                            id="projectSearch"
+                            class="search project-search"
+                            type="search"
+                            placeholder="Search projects..."
+                            autocomplete="off"
+                            aria-label="Search projects"
+                        >
+
+                        <select
+                            id="statusFilter"
+                            class="status-select"
+                            aria-label="Filter projects by status"
+                        >
+                            <option value="">All statuses</option>
+                            <option value="PLANNED">Planned</option>
+                            <option value="IN_PROGRESS">In Progress</option>
+                            <option value="ON_HOLD">On Hold</option>
+                            <option value="COMPLETED">Completed</option>
+                            <option value="CANCELLED">Cancelled</option>
+                        </select>
+
+                    </div>
+
+                    <button
+                        class="btn secondary"
+                        id="exportProjectsButton"
+                        type="button"
+                    >Export CSV</button>
+
+                </div>
+
+                <div class="table-wrap">
+
+                    <table class="table">
+
+                        <thead>
+                            <tr>
+                                <th>Project ID</th>
+                                <th>Name</th>
+                                <th>Client</th>
+                                <th>Manager</th>
+                                <th>Deadline</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Progress</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tableBody">
+                            <tr>
+                                <td colspan="9" class="table-message">
+                                    Loading projects...
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<!-- ADD PROJECT MODAL -->
+<div
+    id="projectModal"
+    class="modal-overlay"
+    aria-hidden="true"
+>
+    <div
+        class="project-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="projectModalTitle"
+    >
+
+        <div class="modal-header">
+
+            <div>
+                <h2 id="projectModalTitle">Create Project</h2>
+                <p>Add a new project to the Orbit workspace.</p>
+            </div>
+
+            <button
+                class="modal-close"
+                id="closeProjectButton"
+                type="button"
+                aria-label="Close modal"
+            >×</button>
+
+        </div>
+
+        <form id="projectForm">
+
+            <div class="modal-body">
+
+                <div class="form-grid">
+
+                    <!-- PROJECT NAME -->
+                    <div class="form-group full">
+                        <label for="projectName">Project Name *</label>
+                        <input
+                            id="projectName"
+                            name="name"
+                            type="text"
+                            placeholder="Enter project name"
+                            maxlength="200"
+                            required
+                        >
+                    </div>
+
+                    <!-- PROJECT CODE -->
+                    <div class="form-group">
+                        <label for="projectCode">Project Code</label>
+                        <input
+                            id="projectCode"
+                            name="project_code"
+                            type="text"
+                            placeholder="e.g. ORB-1001"
+                            maxlength="50"
+                        >
+                        <span class="form-hint">
+                            Leave blank to generate a code automatically.
+                        </span>
+                    </div>
+
+                    <!-- CLIENT -->
+                    <div class="form-group">
+                        <label for="projectClient">Client</label>
+                        <input
+                            id="projectClient"
+                            name="client"
+                            type="text"
+                            placeholder="Client name"
+                        >
+                    </div>
+
+                    <!-- MANAGER ID -->
+                    <div class="form-group">
+                        <label for="projectManager">Manager Employee ID</label>
+                        <input
+                            id="projectManager"
+                            name="manager_id"
+                            type="number"
+                            min="1"
+                            step="1"
+                            placeholder="Numeric employee ID"
+                        >
+                        <span class="form-hint">
+                            Enter the manager's numeric employee ID if required.
+                        </span>
+                    </div>
+
+                    <!-- TEAM ID -->
+                    <div class="form-group">
+                        <label for="projectTeam">Team ID</label>
+                        <input
+                            id="projectTeam"
+                            name="team_id"
+                            type="number"
+                            min="1"
+                            step="1"
+                            placeholder="Optional team ID"
+                        >
+                    </div>
+
+                    <!-- START DATE -->
+                    <div class="form-group">
+                        <label for="projectStartDate">Start Date</label>
+                        <input
+                            id="projectStartDate"
+                            name="start_date"
+                            type="date"
+                        >
+                    </div>
+
+                    <!-- DEADLINE -->
+                    <div class="form-group">
+                        <label for="projectDeadline">Deadline</label>
+                        <input
+                            id="projectDeadline"
+                            name="deadline"
+                            type="date"
+                        >
+                    </div>
+
+                    <!-- STATUS -->
+                    <div class="form-group">
+                        <label for="projectStatus">Status</label>
+                        <select id="projectStatus" name="status">
+                            <option value="PLANNED">Planned</option>
+                            <option value="IN_PROGRESS">In Progress</option>
+                            <option value="ON_HOLD">On Hold</option>
+                            <option value="COMPLETED">Completed</option>
+                            <option value="CANCELLED">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <!-- PRIORITY -->
+                    <div class="form-group">
+                        <label for="projectPriority">Priority</label>
+                        <select id="projectPriority" name="priority">
+                            <option value="LOW">Low</option>
+                            <option value="MEDIUM" selected>Medium</option>
+                            <option value="HIGH">High</option>
+                            <option value="URGENT">Urgent</option>
+                        </select>
+                    </div>
+
+                    <!-- BUDGET -->
+                    <div class="form-group">
+                        <label for="projectBudget">Budget</label>
+                        <input
+                            id="projectBudget"
+                            name="budget"
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            placeholder="0.00"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                    <label for="progress">Progress (%)</label>
+
+                   <div class="progress-control">
+                   <input
+                     type="range"
+                     id="progress"
+                     name="progress"
+                     min="0"
+                     max="100"
+                     step="1"
+                     value="0"
+                        >
+
+        <span id="progressValue">0%</span>
+    </div>
+</div>
+
+                    
+
+
+                    <!-- DESCRIPTION -->
+                    <div class="form-group full">
+                        <label for="projectDescription">Description</label>
+                        <textarea
+                            id="projectDescription"
+                            name="description"
+                            placeholder="Describe the project..."
+                        ></textarea>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn secondary"
+                    id="cancelProjectButton"
+                    type="button"
+                >Cancel</button>
+
+                <button
+                    id="createProjectButton"
+                    class="btn primary"
+                    type="submit"
+                >Create Project</button>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" role="status" aria-live="polite"></div>
+
+<!-- Load shared API first, then the page logic. -->
+<script src="../js/api.js"></script>
+<script src="../js/projects.js"></script>
+
+<script>
+    /* =====================================================
+       SIDEBAR
+    ===================================================== */
+
+    document.getElementById("menuToggle")?.addEventListener("click", () => {
+        document.getElementById("sidebar")?.classList.toggle("open");
+    });
+
+    /* =====================================================
+       MODAL
+    ===================================================== */
+
+    function openProjectModal() {
+        const modal = document.getElementById("projectModal");
+        if (!modal) return;
+
+        modal.classList.add("show");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+
+        setTimeout(() => {
+            document.getElementById("projectName")?.focus();
+        }, 50);
+    }
+
+    function closeProjectModal() {
+        const modal = document.getElementById("projectModal");
+        if (!modal) return;
+
+        modal.classList.remove("show");
+        modal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+    }
+
+    document.getElementById("openProjectButton")
+        ?.addEventListener("click", openProjectModal);
+
+    document.getElementById("closeProjectButton")
+        ?.addEventListener("click", closeProjectModal);
+
+    document.getElementById("cancelProjectButton")
+        ?.addEventListener("click", closeProjectModal);
+
+    document.getElementById("projectModal")
+        ?.addEventListener("click", event => {
+            if (event.target.id === "projectModal") {
+                closeProjectModal();
+            }
+        });
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            closeProjectModal();
+        }
+    });
+
+    /* =====================================================
+       LOGOUT
+    ===================================================== */
+
+    document.getElementById("logoutLink")
+        ?.addEventListener("click", async event => {
+            event.preventDefault();
+
+            try {
+                if (typeof apiLogout === "function") {
+                    await apiLogout();
+                    return;
+                }
+            } catch (error) {
+                console.warn("Logout request failed:", error);
+            }
+
+            localStorage.removeItem("orbit_token");
+            window.location.href = "../login.html";
+        });
+
+    /* =====================================================
+       TOAST
+    ===================================================== */
+
+    function toast(message, type = "success") {
+        const element = document.getElementById("toast");
+        if (!element) {
+            alert(String(message));
+            return;
+        }
+
+        element.textContent =
+            typeof readableError === "function"
+                ? readableError(message)
+                : String(message);
+
+        element.className = "";
+        element.classList.add("show");
+
+        if (type) {
+            element.classList.add(type);
+        }
+
+        clearTimeout(window.orbitToastTimer);
+
+        window.orbitToastTimer = setTimeout(() => {
+            element.classList.remove("show");
+        }, 3500);
+    }
+
+    /* Compatible with projects.js */
+    function showToast(message) {
+        toast(message, "success");
+    }
+
+    /* =====================================================
+       CSV EXPORT
+    ===================================================== */
+
+    document.getElementById("exportProjectsButton")
+        ?.addEventListener("click", () => {
+            const rows = document.querySelectorAll("#tableBody tr");
+            const csvRows = [
+                [
+                    "Project ID",
+                    "Name",
+                    "Client",
+                    "Manager",
+                    "Deadline",
+                    "Status",
+                    "Priority",
+                    "Progress"
+                ]
+            ];
+
+            rows.forEach(row => {
+                if (row.style.display === "none") return;
+
+                const cells = row.querySelectorAll("td");
+                if (cells.length !== 8) return;
+
+                csvRows.push(
+                    Array.from(cells).map(cell =>
+                        cell.innerText.replace(/\s+/g, " ").trim()
+                    )
+                );
+            });
+
+            if (csvRows.length === 1) {
+                toast("No projects available to export.", "error");
+                return;
+            }
+
+            const csv = csvRows.map(row =>
+                row.map(value =>
+                    '"' + String(value).replace(/"/g, '""') + '"'
+                ).join(",")
+            ).join("\r\n");
+
+            const blob = new Blob(
+                ["\uFEFF" + csv],
+                { type: "text/csv;charset=utf-8;" }
+            );
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.download = "orbit-projects.csv";
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            URL.revokeObjectURL(url);
+            toast("Projects exported successfully.", "success");
+        });
+</script>
+
+</body>
+</html>

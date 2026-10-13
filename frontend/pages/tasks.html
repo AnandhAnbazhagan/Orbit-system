@@ -1,0 +1,1511 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>Orbit System - Tasks</title>
+
+
+    <link
+        rel="stylesheet"
+        href="../css/main.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/components.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/responsive.css"
+    >
+
+    
+
+
+    <style>
+
+        /* =========================================================
+           TASKS PAGE
+        ========================================================= */
+
+        .tasks-page {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+
+        .tasks-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+
+        .tasks-header .page-title {
+            margin: 0;
+        }
+
+
+        .tasks-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+
+        /* =========================================================
+           STATISTICS
+        ========================================================= */
+
+        .task-stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+
+        .task-stat {
+            position: relative;
+            overflow: hidden;
+        }
+
+
+        .task-stat-label {
+            color: #667085;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+
+        .task-stat-value {
+            margin-top: 8px;
+            font-size: 28px;
+            line-height: 1;
+            font-weight: 750;
+            color: #101828;
+        }
+
+
+        .task-stat-description {
+            margin-top: 8px;
+            color: #98a2b3;
+            font-size: 12px;
+        }
+
+
+        /* =========================================================
+           TASK CARD
+        ========================================================= */
+
+        .tasks-card {
+            padding: 0;
+            overflow: hidden;
+        }
+
+
+        .tasks-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 20px 22px;
+            border-bottom: 1px solid #eaecf0;
+        }
+
+
+        .tasks-card-title h3 {
+            margin: 0;
+            font-size: 17px;
+            color: #101828;
+        }
+
+
+        .tasks-card-title p {
+            margin: 5px 0 0;
+            color: #98a2b3;
+            font-size: 12px;
+        }
+
+
+        /* =========================================================
+           FILTERS
+        ========================================================= */
+
+        .task-filters {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+
+        .task-search {
+            width: 230px;
+            height: 40px;
+            padding: 0 12px;
+            border: 1px solid #d0d5dd;
+            border-radius: 8px;
+            background: #fff;
+            color: #101828;
+            outline: none;
+            font-size: 13px;
+        }
+
+
+        .task-search:focus {
+            border-color: #6941c6;
+            box-shadow: 0 0 0 3px rgba(105, 65, 198, .10);
+        }
+
+
+        .task-filter {
+            height: 40px;
+            min-width: 150px;
+            padding: 0 11px;
+            border: 1px solid #d0d5dd;
+            border-radius: 8px;
+            background: #fff;
+            color: #344054;
+            outline: none;
+            font-size: 13px;
+        }
+
+
+        /* =========================================================
+           TABLE
+        ========================================================= */
+
+        .task-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+
+        .task-table {
+            width: 100%;
+            min-width: 1050px;
+            border-collapse: collapse;
+        }
+
+
+        .task-table th {
+            padding: 12px 18px;
+            background: #f9fafb;
+            border-bottom: 1px solid #eaecf0;
+            color: #667085;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            white-space: nowrap;
+        }
+
+
+        .task-table td {
+            padding: 15px 18px;
+            border-bottom: 1px solid #f2f4f7;
+            color: #344054;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+
+        .task-table tbody tr:hover {
+            background: #fafaff;
+        }
+
+
+        .task-title-cell {
+            min-width: 220px;
+        }
+
+
+        .task-title-main {
+            color: #101828;
+            font-weight: 650;
+        }
+
+
+        .task-description {
+            max-width: 240px;
+            margin-top: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #98a2b3;
+            font-size: 11px;
+        }
+
+
+        /* =========================================================
+           BADGES
+        ========================================================= */
+
+        .task-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 26px;
+            padding: 0 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 650;
+            white-space: nowrap;
+        }
+
+
+        /* TODO */
+
+        .task-status-todo {
+            background: #fffaeb;
+            color: #b54708;
+        }
+
+
+        /* IN PROGRESS */
+
+        .task-status-in-progress {
+            background: #eff8ff;
+            color: #175cd3;
+        }
+
+
+        /* BLOCKED */
+
+        .task-status-blocked {
+            background: #fef3f2;
+            color: #b42318;
+        }
+
+
+        /* DONE */
+
+        .task-status-done {
+            background: #ecfdf3;
+            color: #027a48;
+        }
+
+
+        /* PRIORITY */
+
+        .task-priority-low {
+            background: #ecfdf3;
+            color: #027a48;
+        }
+
+
+        .task-priority-medium {
+            background: #fffaeb;
+            color: #b54708;
+        }
+
+
+        .task-priority-high {
+            background: #fef3f2;
+            color: #b42318;
+        }
+
+
+       
+
+        /* =========================================================
+           ACTION BUTTONS
+        ========================================================= */
+
+        .task-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+
+        .task-action {
+            width: 34px;
+            height: 34px;
+
+            border: 1px solid #d0d5dd;
+            border-radius: 7px;
+
+            background: #fff;
+            color: #667085;
+
+            cursor: pointer;
+
+            transition: .15s ease;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 14px;
+        }
+
+
+        .task-action:hover {
+            background: #f9fafb;
+            color: #101828;
+            border-color: #98a2b3;
+        }
+
+
+        .task-action.edit:hover {
+            background: #eff8ff;
+            border-color: #b2ddff;
+            color: #175cd3;
+        }
+
+
+        .task-action.delete:hover {
+            background: #fef3f2;
+            border-color: #fecdca;
+            color: #b42318;
+        }
+
+
+        /* =========================================================
+           EMPTY
+        ========================================================= */
+
+        .task-empty {
+            padding: 55px 20px !important;
+            text-align: center !important;
+            color: #98a2b3 !important;
+        }
+
+
+        /* =========================================================
+           MODAL
+        ========================================================= */
+
+        .task-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 5000;
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            background: rgba(16, 24, 40, .55);
+        }
+
+
+        .task-modal.show {
+            display: flex;
+        }
+
+
+        .task-modal-box {
+            width: min(720px, 100%);
+            max-height: 90vh;
+            overflow-y: auto;
+
+            background: #fff;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 24px 70px rgba(16, 24, 40, .20);
+        }
+
+
+        .task-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 18px 22px;
+
+            border-bottom: 1px solid #eaecf0;
+        }
+
+
+        .task-modal-header h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #101828;
+        }
+
+
+        .task-modal-close {
+            width: 34px;
+            height: 34px;
+
+            border: 0;
+            border-radius: 7px;
+
+            background: #f2f4f7;
+            color: #667085;
+
+            cursor: pointer;
+
+            font-size: 19px;
+        }
+
+
+        .task-modal-body {
+            padding: 22px;
+        }
+
+
+        .task-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+
+        .task-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+
+        .task-form-group.full {
+            grid-column: 1 / -1;
+        }
+
+
+        .task-form-group label {
+            color: #344054;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+
+        .task-form-group input,
+        .task-form-group select,
+        .task-form-group textarea {
+            width: 100%;
+
+            border: 1px solid #d0d5dd;
+            border-radius: 8px;
+
+            background: #fff;
+            color: #101828;
+
+            outline: none;
+
+            font-family: inherit;
+            font-size: 13px;
+
+            box-sizing: border-box;
+        }
+
+
+        .task-form-group input,
+        .task-form-group select {
+            height: 40px;
+            padding: 0 11px;
+        }
+
+
+        .task-form-group textarea {
+            min-height: 100px;
+            padding: 10px 11px;
+            resize: vertical;
+        }
+
+
+        .task-form-group input:focus,
+        .task-form-group select:focus,
+        .task-form-group textarea:focus {
+            border-color: #6941c6;
+
+            box-shadow:
+                0 0 0 3px rgba(105, 65, 198, .10);
+        }
+
+
+        .task-modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+
+            padding: 16px 22px;
+
+            border-top: 1px solid #eaecf0;
+        }
+
+
+        /* =========================================================
+           TOAST
+        ========================================================= */
+
+        #toast {
+            z-index: 6000;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 1100px) {
+
+            .task-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+
+            .tasks-card-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+
+            .task-filters {
+                width: 100%;
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .task-stats {
+                grid-template-columns: 1fr;
+            }
+
+
+            .tasks-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+
+            .tasks-header-actions {
+                width: 100%;
+            }
+
+
+            .task-search {
+                width: 100%;
+            }
+
+
+            .task-filters {
+                display: grid;
+                grid-template-columns: 1fr;
+                width: 100%;
+            }
+
+
+            .task-filter {
+                width: 100%;
+            }
+
+
+            .task-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .task-form-group.full {
+                grid-column: auto;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+    <!-- =====================================================
+        SIDEBAR
+    ====================================================== -->
+
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
+
+        <div class="logo">
+            <span class="logo-mark">◉</span>
+            Orbit system
+        </div>
+
+
+        <div class="nav-section">
+            WORKSPACE
+        </div>
+
+
+        <a
+            class="nav-link"
+            href="../dashboard.html"
+        >
+            ◉ Dashboard
+        </a>
+
+
+        <a
+            class="nav-link"
+            href="projects.html"
+        >
+            ▣ Projects
+        </a>
+
+
+        <a
+            class="nav-link active"
+            href="tasks.html"
+        >
+            ✓ Tasks
+        </a>
+
+
+        <a
+            class="nav-link"
+            href="teams.html"
+        >
+            ♢ Teams
+        </a>
+
+
+        <a
+            class="nav-link"
+            href="inventory.html"
+        >
+            ▤ Inventory
+        </a>
+
+
+        <div class="nav-section">
+            ORGANIZATION
+        </div>
+
+
+        <a
+            class="nav-link"
+            href="employees.html"
+        >
+            ♙ Employees
+        </a>
+
+
+        <a
+            class="nav-link"
+            href="reports.html"
+        >
+            ◫ Reports
+        </a>
+
+
+        <a
+            class="nav-link"
+            href="notifications.html"
+        >
+            ◌ Notifications
+        </a>
+
+
+        <a
+            class="nav-link"
+            href="chat.html"
+        >
+            ☵ Chat
+        </a>
+
+
+        <div class="nav-section">
+            SYSTEM
+        </div>
+
+
+        <a
+            class="nav-link"
+            href="settings.html"
+        >
+            ⚙ Settings
+        </a>
+
+
+        <a
+            class="nav-link"
+            href="#"
+            onclick="
+                localStorage.removeItem('orbit_token');
+                localStorage.removeItem('orbit_user');
+                location.href='../login.html';
+                return false;
+            "
+        >
+            ↪ Logout
+        </a>
+
+    </aside>
+
+
+    <!-- =====================================================
+        MAIN
+    ====================================================== -->
+
+    <main class="main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <button
+                class="btn secondary menu-toggle"
+                type="button"
+                onclick="toggleSidebar()"
+            >
+                ☰
+            </button>
+
+
+            <span class="topbar-title">
+                Executive Workspace
+            </span>
+
+
+            <div class="profile">
+
+                <div class="avatar">
+                    O
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================================
+            CONTENT
+        ====================================================== -->
+
+        <section class="content tasks-page">
+
+
+            <!-- PAGE HEADER -->
+
+            <div class="tasks-header">
+
+                <div class="page-title">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            ORBIT / WORKSPACE
+                        </span>
+
+                        <h1>
+                            Tasks
+                        </h1>
+
+                    </div>
+
+                </div>
+
+
+                <div class="tasks-header-actions">
+
+                    <button
+                        class="btn secondary"
+                        type="button"
+                        onclick="exportTasks()"
+                    >
+                        Export
+                    </button>
+
+
+                    <button
+                        class="btn primary"
+                        type="button"
+                        id="newTaskButton"
+                        onclick="openTaskModal()"
+                    >
+                        + New Task
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                STATISTICS
+            ================================================== -->
+
+            <div class="task-stats">
+
+
+                <div class="card task-stat">
+
+                    <div class="task-stat-label">
+                        Total Tasks
+                    </div>
+
+                    <div
+                        class="task-stat-value"
+                        id="totalTasks"
+                    >
+                        0
+                    </div>
+
+                    <div class="task-stat-description">
+                        All workspace tasks
+                    </div>
+
+                </div>
+
+
+                <div class="card task-stat">
+
+                    <div class="task-stat-label">
+                        Pending
+                    </div>
+
+                    <div
+                        class="task-stat-value"
+                        id="pendingTasks"
+                    >
+                        0
+                    </div>
+
+                    <div class="task-stat-description">
+                        Waiting to start
+                    </div>
+
+                </div>
+
+
+                <div class="card task-stat">
+
+                    <div class="task-stat-label">
+                        In Progress
+                    </div>
+
+                    <div
+                        class="task-stat-value"
+                        id="inProgressTasks"
+                    >
+                        0
+                    </div>
+
+                    <div class="task-stat-description">
+                        Currently active
+                    </div>
+
+                </div>
+
+
+                <div class="card task-stat">
+
+                    <div class="task-stat-label">
+                        Completed
+                    </div>
+
+                    <div
+                        class="task-stat-value"
+                        id="completedTasks"
+                    >
+                        0
+                    </div>
+
+                    <div class="task-stat-description">
+                        Successfully completed
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                TASK MANAGEMENT
+            ================================================== -->
+
+            <div class="card tasks-card">
+
+
+                <div class="tasks-card-header">
+
+                    <div class="tasks-card-title">
+
+                        <h3>
+                            Task Management
+                        </h3>
+
+                        <p>
+                            Manage your current tasks and assignments.
+                        </p>
+
+                    </div>
+
+
+                    <div class="task-filters">
+
+                        <input
+                            type="search"
+                            class="task-search"
+                            id="taskSearch"
+                            placeholder="Search tasks..."
+                            autocomplete="off"
+                        >
+
+
+                        <select
+                            class="task-filter"
+                            id="statusFilter"
+                        >
+
+                            <option value="">
+                                All Status
+                            </option>
+
+
+                            <option value="TODO">
+                                To Do
+                            </option>
+
+
+                            <option value="IN_PROGRESS">
+                                In Progress
+                            </option>
+
+
+                            <option value="BLOCKED">
+                                Blocked
+                            </option>
+
+
+                            <option value="DONE">
+                                Completed
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TABLE -->
+
+                <div class="task-table-wrap">
+
+                    <table class="task-table">
+
+                        <thead>
+
+                        <tr>
+
+                            <th>
+                                Task
+                            </th>
+
+
+                            <th>
+                                Project
+                            </th>
+
+
+                            <th>
+                                Assignee
+                            </th>
+
+
+                            <th>
+                                Status
+                            </th>
+
+
+                            <th>
+                                Priority
+                            </th>
+
+
+                            <th>
+                                Deadline
+                            </th>
+
+
+                           
+
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+
+                        <tbody id="tableBody">
+
+                            <tr>
+
+                                <td
+                                    colspan="8"
+                                    class="task-empty"
+                                >
+                                    Loading tasks...
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+    TASK MODAL
+========================================================== -->
+
+<div
+    class="task-modal"
+    id="taskModal"
+    aria-hidden="true"
+>
+
+
+    <div
+        class="task-modal-box"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="taskModalTitle"
+    >
+
+
+        <!-- HEADER -->
+
+        <div class="task-modal-header">
+
+            <h2 id="taskModalTitle">
+                Create Task
+            </h2>
+
+
+            <button
+                type="button"
+                class="task-modal-close"
+                onclick="closeTaskModal()"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <!-- FORM -->
+
+        <form id="taskForm">
+
+
+            <div class="task-modal-body">
+
+                <div class="task-form-grid">
+
+
+                    <!-- TITLE -->
+
+                    <div class="task-form-group full">
+
+                        <label for="taskTitle">
+                            Task Title *
+                        </label>
+
+
+                        <input
+                            type="text"
+                            id="taskTitle"
+                            placeholder="Enter task title"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- PROJECT -->
+
+                    <div class="task-form-group">
+
+                        <label for="taskProject">
+                            Project ID
+                        </label>
+
+
+                        <input
+                            type="number"
+                            id="taskProject"
+                            placeholder="Project ID"
+                            min="1"
+                        >
+
+                    </div>
+
+
+                    <!-- ASSIGNEE -->
+
+                    <div class="task-form-group">
+
+                        <label for="taskAssignee">
+                            Employee ID
+                        </label>
+
+
+                        <input
+                            type="number"
+                            id="taskAssignee"
+                            placeholder="Employee ID"
+                            min="1"
+                        >
+
+                    </div>
+
+
+                    <!-- START DATE -->
+
+                    <div class="task-form-group">
+
+                        <label for="taskStartDate">
+                            Start Date
+                        </label>
+
+
+                        <input
+                            type="date"
+                            id="taskStartDate"
+                        >
+
+                    </div>
+
+
+                    <!-- DEADLINE -->
+
+                    <div class="task-form-group">
+
+                        <label for="taskDueDate">
+                            Deadline
+                        </label>
+
+
+                        <input
+                            type="date"
+                            id="taskDueDate"
+                        >
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div class="task-form-group">
+
+                        <label for="taskStatus">
+                            Status
+                        </label>
+
+
+                        <select id="taskStatus">
+
+                            <option value="TODO">
+                                Scheduled / To Do
+                            </option>
+
+
+                            <option value="IN_PROGRESS">
+                                In Progress
+                            </option>
+
+
+                            <option value="BLOCKED">
+                                Cancelled / Blocked
+                            </option>
+
+
+                            <option value="DONE">
+                                Completed
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- PRIORITY -->
+
+                    <div class="task-form-group">
+
+                        <label for="taskPriority">
+                            Priority
+                        </label>
+
+
+                        <select id="taskPriority">
+
+                            <option value="LOW">
+                                Low
+                            </option>
+
+
+                            <option
+                                value="MEDIUM"
+                                selected
+                            >
+                                Medium
+                            </option>
+
+
+                            <option value="HIGH">
+                                High
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- DESCRIPTION -->
+
+                    <div class="task-form-group full">
+
+                        <label for="taskDescription">
+                            Description
+                        </label>
+
+
+                        <textarea
+                            id="taskDescription"
+                            placeholder="Describe the task..."
+                        ></textarea>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- FOOTER -->
+
+            <div class="task-modal-footer">
+
+                <button
+                    type="button"
+                    class="btn secondary"
+                    onclick="closeTaskModal()"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn primary"
+                    id="saveTaskButton"
+                >
+                    Save Task
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+    TOAST
+========================================================== -->
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
+
+<a class="nav-link" href="#" onclick="
+    localStorage.removeItem('orbit_token');
+    localStorage.removeItem('orbit_user');
+    location.href='../login.html';
+    return false;
+">↪ Logout</a>
+
+<!-- =========================================================
+    JAVASCRIPT
+========================================================== -->
+
+<script src="../js/api.js"></script>
+
+<script src="../js/tasks.js"></script>
+
+
+<script>
+
+    /* =========================================================
+       FORM SUBMIT
+    ========================================================= */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            const form =
+                document.getElementById("taskForm");
+
+
+            const modal =
+                document.getElementById("taskModal");
+
+
+            if (form) {
+
+                form.addEventListener(
+                    "submit",
+                    function (event) {
+
+                        event.preventDefault();
+
+                        if (
+                            typeof saveTask ===
+                            "function"
+                        ) {
+
+                            saveTask();
+
+                        }
+
+                    }
+                );
+
+            }
+
+
+            /* =================================================
+               OUTSIDE CLICK
+            ================================================= */
+
+            if (modal) {
+
+                modal.addEventListener(
+                    "click",
+                    function (event) {
+
+                        if (
+                            event.target === modal
+                        ) {
+
+                            if (
+                                typeof closeTaskModal ===
+                                "function"
+                            ) {
+
+                                closeTaskModal();
+
+                            }
+
+                        }
+
+                    }
+                );
+
+            }
+
+
+            /* =================================================
+               ESC KEY
+            ================================================= */
+
+            document.addEventListener(
+                "keydown",
+                function (event) {
+
+                    if (
+                        event.key === "Escape"
+                    ) {
+
+                        if (
+                            modal &&
+                            modal.classList.contains("show")
+                        ) {
+
+                            if (
+                                typeof closeTaskModal ===
+                                "function"
+                            ) {
+
+                                closeTaskModal();
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+    /* =========================================================
+       SIDEBAR
+    ========================================================= */
+
+    function toggleSidebar() {
+
+        const sidebar =
+            document.getElementById("sidebar");
+
+
+        if (!sidebar) return;
+
+
+        sidebar.classList.toggle("open");
+
+    }
+
+</script>
+
+
+</body>
+
+</html> 

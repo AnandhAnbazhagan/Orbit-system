@@ -1,0 +1,1651 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>Orbit System - Dashboard</title>
+
+
+    <!-- =========================================
+         ORBIT CSS
+    ========================================== -->
+
+    <link
+        rel="stylesheet"
+        href="css/main.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/dashboard.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/components.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/responsive.css"
+    >
+
+    
+
+
+    <!-- =========================================
+         DASHBOARD CUSTOM STYLES
+    ========================================== -->
+
+    <style>
+
+        /* =========================================
+           PROFILE
+        ========================================= */
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+
+        .profile-info {
+            text-align: right;
+            line-height: 1.25;
+        }
+
+
+        .profile-name {
+            display: block;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            color: #0f172a;
+        }
+
+
+        .profile-role {
+            display: block;
+
+            margin-top: 3px;
+
+            font-size: 11px;
+
+            color: #64748b;
+        }
+
+
+        .profile .avatar {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #635bff;
+
+            color: #ffffff;
+
+            font-size: 14px;
+            font-weight: 800;
+
+            box-shadow:
+                0 5px 15px
+                rgba(99, 91, 255, .20);
+        }
+
+
+        /* =========================================
+           DASHBOARD WELCOME
+        ========================================== */
+
+        .dashboard-welcome {
+            margin-bottom: 20px;
+        }
+
+
+        .dashboard-welcome h2 {
+            margin: 5px 0 8px;
+        }
+
+
+        .dashboard-welcome p {
+            margin: 0;
+        }
+
+
+        /* =========================================
+           KPI CARDS
+        ========================================== */
+
+        .stats {
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+        }
+
+
+        .stat {
+            min-height: 125px;
+        }
+
+
+        .stat .value {
+            font-size: 32px;
+
+            font-weight: 800;
+
+            margin-top: 8px;
+        }
+
+
+        /* =========================================
+           DASHBOARD SECTIONS
+        ========================================== */
+
+        .dashboard-section {
+            margin-top: 20px;
+        }
+
+
+        .dashboard-card-title {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 12px;
+        }
+
+
+        /* =========================================
+           LIVE BADGE
+        ========================================== */
+
+        .live-badge {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            padding: 5px 9px;
+
+            border-radius: 999px;
+
+            background: #ecfdf5;
+
+            color: #047857;
+
+            font-size: 10px;
+
+            font-weight: 700;
+        }
+
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #10b981;
+
+            animation:
+                orbitPulse 1.8s infinite;
+        }
+
+
+        @keyframes orbitPulse {
+
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: .45;
+                transform: scale(.75);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+        }
+
+
+        /* =========================================
+           PROJECT / TASK STATUS
+        ========================================== */
+
+        .status-card {
+            min-height: 310px;
+        }
+
+
+        .status-summary {
+            margin-top: 22px;
+        }
+
+
+        .status-row {
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            padding: 14px 0;
+        }
+
+
+        .status-row + .status-row {
+            border-top:
+                1px solid #eef2f7;
+        }
+
+
+        .status-icon {
+            width: 38px;
+            height: 38px;
+
+            flex: 0 0 38px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 10px;
+
+            background: #f1f5ff;
+
+            color: #635bff;
+
+            font-size: 12px;
+
+            font-weight: 800;
+        }
+
+
+        .status-content {
+            flex: 1;
+
+            min-width: 0;
+        }
+
+
+        .status-header {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 10px;
+
+            margin-bottom: 8px;
+
+            font-size: 12px;
+
+            color: #475569;
+        }
+
+
+        .status-header strong {
+            color: #0f172a;
+
+            font-size: 14px;
+        }
+
+
+        .progress-track {
+            width: 100%;
+
+            height: 7px;
+
+            background: #eef2f7;
+
+            border-radius: 999px;
+
+            overflow: hidden;
+        }
+
+
+        .progress-fill {
+            height: 100%;
+
+            min-width: 0;
+
+            border-radius: 999px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #635bff,
+                    #4338ca
+                );
+
+            transition:
+                width .5s ease;
+        }
+
+
+        /* =========================================
+           EMPTY STATE
+        ========================================== */
+
+        .empty-state {
+            width: 100%;
+
+            text-align: center;
+
+            color: #94a3b8;
+
+            font-size: 12px;
+
+            padding: 40px 10px;
+        }
+
+
+        /* =========================================
+           ACTIVITY
+        ========================================== */
+
+        .activity-item {
+            display: flex;
+
+            gap: 12px;
+
+            align-items: flex-start;
+
+            padding: 12px 0;
+        }
+
+
+        .activity-item + .activity-item {
+            border-top:
+                1px solid #eef2f7;
+        }
+
+
+        .activity-dot {
+            width: 9px;
+            height: 9px;
+
+            margin-top: 6px;
+
+            flex: 0 0 auto;
+
+            border-radius: 50%;
+
+            background: #635bff;
+        }
+
+
+        .activity-title {
+            font-weight: 700;
+
+            color: #0f172a;
+
+            font-size: 13px;
+        }
+
+
+        .activity-text {
+            margin-top: 3px;
+
+            color: #64748b;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================================
+           TOPBAR
+        ========================================== */
+
+        .topbar {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+        }
+
+
+        .topbar-left {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+
+        .topbar-title {
+            font-size: 14px;
+
+            font-weight: 700;
+
+            color: #0f172a;
+        }
+
+
+        .topbar-right {
+            margin-left: auto;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 18px;
+        }
+
+
+        .notification-btn {
+            width: 36px;
+            height: 36px;
+
+            border:
+                1px solid #e2e8f0;
+
+            border-radius: 10px;
+
+            background: #ffffff;
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 16px;
+
+            color: #475569;
+
+            transition: .2s ease;
+        }
+
+
+        .notification-btn:hover {
+            border-color: #c7d2fe;
+
+            background: #f8faff;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+        ========================================== */
+
+        @media (max-width: 1100px) {
+
+            .stats {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+
+            .profile-info {
+                display: none;
+            }
+
+
+            .topbar-title {
+                display: none;
+            }
+
+
+            .topbar-right {
+                gap: 10px;
+            }
+
+
+            .status-card {
+                min-height: auto;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
+
+
+        <!-- LOGO -->
+
+        <div class="logo">
+
+            <span class="logo-mark">
+                ◉
+            </span>
+
+            Orbit system
+
+        </div>
+
+
+        <!-- WORKSPACE -->
+
+        <div class="nav-section">
+            WORKSPACE
+        </div>
+
+
+        <a
+            class="nav-link active"
+            href="dashboard.html"
+        >
+            ◉ Dashboard
+        </a>
+
+
+        <a
+            class="nav-link"
+            href="pages/projects.html"
+        >
+            ▣ Projects
+        </a>
+
+
+        <a
+            class="nav-link"
+            href="pages/tasks.html"
+        >
+            ✓ Tasks
+        </a>
+
+
+        <a
+            class="nav-link"
+            href="pages/teams.html"
+        >
+            ♢ Teams
+        </a>
+
+
+        <a
+            class="nav-link"
+            href="pages/inventory.html"
+        >
+            ▤ Inventory
+        </a>
+
+
+        <!-- ORGANIZATION -->
+
+        <div class="nav-section">
+            ORGANIZATION
+        </div>
+
+
+        <a
+            class="nav-link"
+            href="pages/employees.html"
+        >
+            ♙ Employees
+        </a>
+
+
+        <a
+            class="nav-link"
+            href="pages/reports.html"
+        >
+            ◫ Reports
+        </a>
+
+
+        <a
+            class="nav-link"
+            href="pages/notifications.html"
+        >
+            ◌ Notifications
+        </a>
+
+
+        <a
+            class="nav-link"
+            href="pages/chat.html"
+        >
+            ☵ Chat
+        </a>
+
+
+        <!-- SYSTEM -->
+
+        <div class="nav-section">
+            SYSTEM
+        </div>
+
+
+        <a
+            class="nav-link"
+            href="pages/settings.html"
+        >
+            ⚙ Settings
+        </a>
+
+
+        <a
+            class="nav-link"
+            href="#"
+            onclick="
+                logout();
+                return false;
+            "
+        >
+            ↪ Logout
+        </a>
+
+
+    </aside>
+
+
+    <!-- =========================================
+         MAIN
+    ========================================== -->
+
+    <main class="main">
+
+
+        <!-- =====================================
+             TOPBAR
+        ====================================== -->
+
+        <header class="topbar">
+
+
+            <div class="topbar-left">
+
+
+                <button
+                    class="btn secondary menu-toggle"
+                    type="button"
+                    onclick="
+                        document
+                            .getElementById('sidebar')
+                            .classList.toggle('open')
+                    "
+                >
+                    ☰
+                </button>
+
+
+                <span class="topbar-title">
+                    Workspace
+                </span>
+
+
+            </div>
+
+
+            <div class="topbar-right">
+
+
+                <button
+                    type="button"
+                    class="notification-btn"
+                    title="Notifications"
+                    onclick="
+                        window.location.href =
+                        'pages/notifications.html'
+                    "
+                >
+                     🔔
+                </button>
+
+
+                <div class="profile">
+
+
+                    <div class="profile-info">
+
+
+                        <span
+                            class="profile-name"
+                            id="profileName"
+                        >
+                            Loading...
+                        </span>
+
+
+                        <span
+                            class="profile-role"
+                            id="profileRole"
+                        >
+                            Loading...
+                        </span>
+
+
+                    </div>
+
+
+                    <div
+                        class="avatar"
+                        id="profileAvatar"
+                    >
+                        U
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </header>
+
+
+        <!-- =====================================
+             CONTENT
+        ====================================== -->
+
+        <section class="content">
+
+
+            <!-- =================================
+                 WELCOME
+            ================================== -->
+
+            <div class="dashboard-welcome">
+
+
+                <span
+                    class="eyebrow"
+                    style="color:#635bff"
+                >
+                    ORBIT WORKSPACE
+                </span>
+
+
+                <h2 id="welcome">
+                    Welcome back
+                </h2>
+
+
+            </div>
+
+
+            <!-- =================================
+                 KPI CARDS
+            ================================== -->
+
+            <div class="grid stats">
+
+
+                <!-- EMPLOYEES -->
+
+                <div class="card stat">
+
+
+                    <div class="label">
+                        Total Employees
+                    </div>
+
+
+                    <div
+                        class="value"
+                        data-stat="employees"
+                    >
+                        0
+                    </div>
+
+
+                    <div class="mini">
+                        Organization workforce
+                    </div>
+
+
+                </div>
+
+
+                <!-- PROJECTS -->
+
+                <div class="card stat">
+
+
+                    <div class="label">
+                        Active Projects
+                    </div>
+
+
+                    <div
+                        class="value"
+                        data-stat="active_projects"
+                    >
+                        0
+                    </div>
+
+
+                    <div class="mini">
+                        Currently active
+                    </div>
+
+
+                </div>
+
+
+                <!-- PENDING TASKS -->
+
+                <div class="card stat">
+
+
+                    <div class="label">
+                        Pending Tasks
+                    </div>
+
+
+                    <div
+                        class="value"
+                        data-stat="pending_tasks"
+                    >
+                        0
+                    </div>
+
+
+                    <div class="mini">
+                        Work requiring attention
+                    </div>
+
+
+                </div>
+
+
+                <!-- COMPLETED TASKS -->
+
+                <div class="card stat">
+
+
+                    <div class="label">
+                        Completed Tasks
+                    </div>
+
+
+                    <div
+                        class="value"
+                        data-stat="completed_tasks"
+                    >
+                        0
+                    </div>
+
+
+                    <div class="mini">
+                        Completed work
+                    </div>
+
+
+                </div>
+
+
+                <!-- INVENTORY -->
+
+                <div class="card stat">
+
+
+                    <div class="label">
+                        Inventory Items
+                    </div>
+
+
+                    <div
+                        class="value"
+                        data-stat="inventory_items"
+                    >
+                        0
+                    </div>
+
+
+                    <div class="mini">
+                        Total stock records
+                    </div>
+
+
+                </div>
+
+
+                <!-- LOW STOCK -->
+
+                <div class="card stat">
+
+
+                    <div class="label">
+                        Low Stock Items
+                    </div>
+
+
+                    <div
+                        class="value"
+                        data-stat="low_stock"
+                    >
+                        0
+                    </div>
+
+
+                    <div class="mini">
+                        Inventory alerts
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =================================
+                 PROJECT / TASK OVERVIEW
+            ================================== -->
+
+            <div
+                class="grid dashboard-grid dashboard-section"
+            >
+
+
+                <!-- =================================
+                     PROJECT OVERVIEW
+                ================================== -->
+
+                <div class="card status-card">
+
+
+                    <div
+                        class="dashboard-card-title"
+                    >
+
+
+                        <div>
+
+
+                            <h3>
+                                Project Overview
+                            </h3>
+
+
+                            <span class="mini">
+                                Current project distribution
+                            </span>
+
+
+                        </div>
+
+
+                        <span class="live-badge">
+
+
+                            <span
+                                class="live-dot"
+                            ></span>
+
+
+                            LIVE
+
+
+                        </span>
+
+
+                    </div>
+
+
+                    <div
+                        class="status-summary"
+                        id="projectChart"
+                    >
+
+
+                        <!-- IN PROGRESS -->
+
+                        <div class="status-row">
+
+
+                            <div class="status-icon">
+                                P
+                            </div>
+
+
+                            <div class="status-content">
+
+
+                                <div class="status-header">
+
+                                    <span>
+                                        In Progress
+                                    </span>
+
+                                    <strong
+                                        data-project-status="in_progress"
+                                    >
+                                        0
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="progress-track">
+
+                                    <div
+                                        class="progress-fill"
+                                        data-progress="in_progress"
+                                        style="width:0%"
+                                    ></div>
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- COMPLETED -->
+
+                        <div class="status-row">
+
+
+                            <div class="status-icon">
+                                C
+                            </div>
+
+
+                            <div class="status-content">
+
+
+                                <div class="status-header">
+
+                                    <span>
+                                        Completed
+                                    </span>
+
+                                    <strong
+                                        data-project-status="completed"
+                                    >
+                                        0
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="progress-track">
+
+                                    <div
+                                        class="progress-fill"
+                                        data-progress="completed"
+                                        style="width:0%"
+                                    ></div>
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- NOT STARTED -->
+
+                        <div class="status-row">
+
+
+                            <div class="status-icon">
+                                N
+                            </div>
+
+
+                            <div class="status-content">
+
+
+                                <div class="status-header">
+
+                                    <span>
+                                        Not Started
+                                    </span>
+
+                                    <strong
+                                        data-project-status="not_started"
+                                    >
+                                        0
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="progress-track">
+
+                                    <div
+                                        class="progress-fill"
+                                        data-progress="not_started"
+                                        style="width:0%"
+                                    ></div>
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- =================================
+                     TASK OVERVIEW
+                ================================== -->
+
+                <div class="card status-card">
+
+
+                    <div
+                        class="dashboard-card-title"
+                    >
+
+
+                        <div>
+
+
+                            <h3>
+                                Task Overview
+                            </h3>
+
+
+                            <span class="mini">
+                                Current task distribution
+                            </span>
+
+
+                        </div>
+
+
+                        <span class="live-badge">
+
+
+                            <span
+                                class="live-dot"
+                            ></span>
+
+
+                            LIVE
+
+
+                        </span>
+
+
+                    </div>
+
+
+                    <div
+                        class="status-summary"
+                        id="taskChart"
+                    >
+
+
+                        <!-- PENDING -->
+
+                        <div class="status-row">
+
+
+                            <div class="status-icon">
+                                P
+                            </div>
+
+
+                            <div class="status-content">
+
+
+                                <div class="status-header">
+
+                                    <span>
+                                        Pending
+                                    </span>
+
+                                    <strong
+                                        data-task-status="pending"
+                                    >
+                                        0
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="progress-track">
+
+                                    <div
+                                        class="progress-fill"
+                                        data-task-progress="pending"
+                                        style="width:0%"
+                                    ></div>
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- IN PROGRESS -->
+
+                        <div class="status-row">
+
+
+                            <div class="status-icon">
+                                W
+                            </div>
+
+
+                            <div class="status-content">
+
+
+                                <div class="status-header">
+
+                                    <span>
+                                        In Progress
+                                    </span>
+
+                                    <strong
+                                        data-task-status="in_progress"
+                                    >
+                                        0
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="progress-track">
+
+                                    <div
+                                        class="progress-fill"
+                                        data-task-progress="in_progress"
+                                        style="width:0%"
+                                    ></div>
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- COMPLETED -->
+
+                        <div class="status-row">
+
+
+                            <div class="status-icon">
+                                C
+                            </div>
+
+
+                            <div class="status-content">
+
+
+                                <div class="status-header">
+
+                                    <span>
+                                        Completed
+                                    </span>
+
+                                    <strong
+                                        data-task-status="completed"
+                                    >
+                                        0
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="progress-track">
+
+                                    <div
+                                        class="progress-fill"
+                                        data-task-progress="completed"
+                                        style="width:0%"
+                                    ></div>
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =================================
+                 LOWER DASHBOARD
+            ================================== -->
+
+            <div
+                class="grid two dashboard-section"
+            >
+
+
+                <!-- RECENT PROJECTS -->
+
+                <div class="card">
+
+
+                    <div
+                        class="dashboard-card-title"
+                    >
+
+
+                        <div>
+
+
+                            <h3>
+                                Recent Projects
+                            </h3>
+
+
+                            <p class="muted">
+                                View and manage
+                                delivery work.
+                            </p>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <br>
+
+
+                    <a
+                        class="btn primary"
+                        href="pages/projects.html"
+                    >
+                        View Projects →
+                    </a>
+
+
+                </div>
+
+
+                <!-- SYSTEM ACTIVITY -->
+
+                <div class="card">
+
+
+                    <div
+                        class="dashboard-card-title"
+                    >
+
+
+                        <div>
+
+
+                            <h3>
+                                System Activity
+                            </h3>
+
+
+                            <span class="mini">
+                                Workspace status
+                            </span>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- ACTIVITY 1 -->
+
+                    <div class="activity-item">
+
+
+                        <span
+                            class="activity-dot"
+                        ></span>
+
+
+                        <div>
+
+
+                            <div class="activity-title">
+                                Workspace connected
+                            </div>
+
+
+                            <div class="activity-text">
+                                FastAPI backend is connected.
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- ACTIVITY 2 -->
+
+                    <div class="activity-item">
+
+
+                        <span
+                            class="activity-dot"
+                        ></span>
+
+
+                        <div>
+
+
+                            <div class="activity-title">
+                                Database monitoring active
+                            </div>
+
+
+                            <div class="activity-text">
+                                Dashboard values are loaded
+                                from MySQL.
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- ACTIVITY 3 -->
+
+                    <div class="activity-item">
+
+
+                        <span
+                            class="activity-dot"
+                        ></span>
+
+
+                        <div>
+
+
+                            <div class="activity-title">
+                                Live refresh enabled
+                            </div>
+
+
+                            <div class="activity-text">
+                                Dashboard refreshes automatically.
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+
+<!-- =========================================
+     TOAST
+========================================== -->
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
+
+<!-- =========================================
+     API
+========================================== -->
+
+<script src="js/api.js"></script>
+
+
+<!-- =========================================
+     DASHBOARD
+========================================== -->
+
+<script src="js/dashboard.js"></script>
+
+
+<!-- =========================================
+     PAGE FUNCTIONS
+========================================== -->
+
+<script>
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+function logout() {
+
+    localStorage.removeItem(
+        "orbit_token"
+    );
+
+
+    localStorage.removeItem(
+        "orbit_remember"
+    );
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =========================================
+   MOBILE SIDEBAR
+========================================= */
+
+document
+    .querySelectorAll(".nav-link")
+    .forEach(link => {
+
+        link.addEventListener(
+            "click",
+            () => {
+
+                if (
+                    window.innerWidth <= 700
+                ) {
+
+                    document
+                        .getElementById(
+                            "sidebar"
+                        )
+                        ?.classList
+                        .remove("open");
+
+                }
+
+            }
+        );
+
+    });
+
+
+</script>
+
+
+</body>
+
+</html>
