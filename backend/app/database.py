@@ -1,38 +1,20 @@
+import os
 from urllib.parse import quote_plus
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
+DB_HOST = os.getenv("DB_HOST", "127.0.0.1")
+DB_PORT = int(os.getenv("DB_PORT", "3306"))
+DB_NAME = os.getenv("DB_NAME", "embsys_orbit")
+DB_USER = os.getenv("DB_USER", "root")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "Anandh@2013")
 
-# ============================================================
-# Database Configuration
-# ============================================================
-
-DB_HOST = "127.0.0.1"
-DB_PORT = 3306
-DB_NAME = "embsys_orbit"
-DB_USER = "root"
-DB_PASSWORD = "NewPassword@123"
-
-
-# ============================================================
-# Database URL
-# ============================================================
-
-# quote_plus() safely encodes special characters in the password.
-# Example: @ becomes %40.
 DATABASE_URL = (
-    f"mysql+pymysql://"
-    f"{quote_plus(DB_USER)}:"
+    f"mysql+pymysql://{quote_plus(DB_USER)}:"
     f"{quote_plus(DB_PASSWORD)}@"
-    f"{DB_HOST}:{DB_PORT}/"
-    f"{DB_NAME}"
+    f"{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
-
-
-# ============================================================
-# SQLAlchemy Engine
-# ============================================================
 
 engine = create_engine(
     DATABASE_URL,
@@ -41,42 +23,17 @@ engine = create_engine(
     echo=False,
 )
 
-
-# ============================================================
-# Database Session
-# ============================================================
-
 SessionLocal = sessionmaker(
     bind=engine,
     autoflush=False,
     autocommit=False,
 )
 
-
-# ============================================================
-# SQLAlchemy Base
-# ============================================================
-
 class Base(DeclarativeBase):
-    """Base class for all SQLAlchemy ORM models."""
-
     pass
 
-
-# ============================================================
-# FastAPI Database Dependency
-# ============================================================
-
 def get_db():
-    """
-    Provides a database session for FastAPI requests.
-
-    The session is automatically closed after the request,
-    even if an exception occurs.
-    """
-
     db = SessionLocal()
-
     try:
         yield db
     finally:

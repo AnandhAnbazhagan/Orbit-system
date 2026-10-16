@@ -1,1301 +1,1043 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#080b16">
-
-    <title>Orbit System | Welcome</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-          rel="stylesheet">
-
-    <style>
-        /* ==================================================
-           ORBIT SYSTEM — LUXURY WELCOME EXPERIENCE
-        ================================================== */
-
-        :root {
-            --bg: #080b16;
-            --surface: #101628;
-            --primary: #7185ff;
-            --violet: #a78bfa;
-            --cyan: #6ee7f9;
-            --text: #f7f8ff;
-            --muted: #98a3bf;
-            --border: rgba(255, 255, 255, 0.10);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            min-height: 100%;
-        }
-
-        body {
-            min-height: 100vh;
-            min-height: 100dvh;
-
-            overflow: hidden;
-
-            font-family: 'Inter', sans-serif;
-            color: var(--text);
-            background: var(--bg);
-        }
-
-        button {
-            font: inherit;
-        }
-
-        /* ==================================================
-           MAIN SCREEN
-        ================================================== */
-
-        .welcome-screen {
-            position: relative;
-            isolation: isolate;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-
-            min-height: 100vh;
-            min-height: 100dvh;
-
-            padding: 95px 24px 105px;
-
-            overflow: hidden;
-
-            background:
-                radial-gradient(
-                    ellipse at 50% 43%,
-                    rgba(77, 91, 190, 0.17),
-                    transparent 36%
-                ),
-                linear-gradient(
-                    145deg,
-                    #080b16 0%,
-                    #0d1325 48%,
-                    #11112a 100%
-                );
-        }
-
-        /* ==================================================
-           BACKGROUND GRID
-        ================================================== */
-
-        .background-grid {
-            position: absolute;
-            inset: 0;
-            z-index: -3;
-
-            background-image:
-                linear-gradient(
-                    rgba(143, 160, 255, 0.045) 1px,
-                    transparent 1px
-                ),
-                linear-gradient(
-                    90deg,
-                    rgba(143, 160, 255, 0.045) 1px,
-                    transparent 1px
-                );
-
-            background-size: 58px 58px;
-
-            mask-image: radial-gradient(
-                ellipse at center,
-                black,
-                transparent 78%
-            );
-
-            pointer-events: none;
-        }
-
-        /* ==================================================
-           AMBIENT LIGHT
-        ================================================== */
-
-        .glow {
-            position: absolute;
-            z-index: -2;
-
-            width: 360px;
-            height: 360px;
-
-            border-radius: 50%;
-            filter: blur(110px);
-
-            opacity: 0.32;
-            pointer-events: none;
-
-            animation: glow-drift 12s ease-in-out infinite alternate;
-        }
-
-        .glow-one {
-            top: -170px;
-            left: -110px;
-
-            background: #475cff;
-        }
-
-        .glow-two {
-            right: -140px;
-            bottom: -170px;
-
-            background: #8338ec;
-            animation-delay: -5s;
-        }
-
-        .glow-three {
-            top: 42%;
-            left: 48%;
-
-            width: 210px;
-            height: 210px;
-
-            background: #176bb9;
-            opacity: 0.14;
-        }
-
-        @keyframes glow-drift {
-            from {
-                transform: translate3d(0, 0, 0) scale(1);
-            }
-
-            to {
-                transform: translate3d(35px, 45px, 0) scale(1.16);
-            }
-        }
-
-        /* ==================================================
-           TOP NAVIGATION
-        ================================================== */
-
-        .topbar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            padding: 26px 5.5%;
-
-            border-bottom: 1px solid rgba(255, 255, 255, 0.055);
-        }
-
-        .top-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .mini-logo {
-            display: grid;
-            place-items: center;
-
-            width: 38px;
-            height: 38px;
-
-            color: white;
-
-            background: linear-gradient(
-                145deg,
-                #8190ff,
-                #5c53d9
-            );
-
-            border: 1px solid rgba(255, 255, 255, 0.23);
-            border-radius: 12px;
-
-            box-shadow: 0 5px 20px rgba(91, 91, 232, 0.25);
-        }
-
-        .mini-logo svg {
-            width: 25px;
-            height: 25px;
-        }
-
-        .top-brand-name {
-            color: #f3f4ff;
-
-            font-size: 13px;
-            font-weight: 800;
-
-            letter-spacing: 1.8px;
-        }
-
-        .top-brand-name span {
-            color: #8b9aff;
-        }
-
-        .system-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 9px;
-
-            padding: 9px 13px;
-
-            color: #b8c5df;
-
-            font-size: 10px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-
-            background: rgba(255, 255, 255, 0.035);
-
-            border: 1px solid var(--border);
-            border-radius: 30px;
-        }
-
-        .status-dot {
-            width: 7px;
-            height: 7px;
-
-            background: #55d6a3;
-            border-radius: 50%;
-
-            box-shadow: 0 0 10px rgba(85, 214, 163, 0.65);
-        }
-
-        /* ==================================================
-           HERO CONTENT
-        ================================================== */
-
-        .welcome-content {
-            position: relative;
-            z-index: 2;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-
-            width: 100%;
-            max-width: 820px;
-
-            text-align: center;
-
-            animation: hero-appear 1s cubic-bezier(.2, .7, .2, 1) both;
-        }
-
-        @keyframes hero-appear {
-            from {
-                opacity: 0;
-                transform: translateY(25px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ==================================================
-           ORBITAL LOGO
-        ================================================== */
-
-        .logo-stage {
-            position: relative;
-
-            display: grid;
-            place-items: center;
-
-            width: 160px;
-            height: 160px;
-
-            margin-bottom: 30px;
-        }
-
-        .logo-ring {
-            position: absolute;
-
-            width: 138px;
-            height: 138px;
-
-            border: 1px solid rgba(143, 157, 255, 0.20);
-            border-radius: 50%;
-
-            animation: ring-rotate 22s linear infinite;
-        }
-
-        .logo-ring::before {
-            position: absolute;
-            top: 17px;
-            right: 10px;
-
-            width: 8px;
-            height: 8px;
-
-            background: var(--cyan);
-
-            border: 2px solid #10152b;
-            border-radius: 50%;
-
-            box-shadow: 0 0 15px rgba(110, 231, 249, 0.8);
-
-            content: "";
-        }
-
-        .logo-ring-two {
-            width: 112px;
-            height: 150px;
-
-            border-color: rgba(167, 139, 250, 0.48);
-
-            transform: rotate(55deg);
-            animation: ring-rotate-two 16s linear infinite;
-        }
-
-        .logo-ring-two::before {
-            top: auto;
-            right: auto;
-            bottom: 10px;
-            left: 15px;
-
-            width: 6px;
-            height: 6px;
-
-            background: #b9adff;
-        }
-
-        .brand-icon {
-            position: relative;
-            z-index: 2;
-
-            display: grid;
-            place-items: center;
-
-            width: 88px;
-            height: 88px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(116, 133, 255, 0.25),
-                    rgba(104, 70, 205, 0.12)
-                );
-
-            border: 1px solid rgba(179, 187, 255, 0.38);
-            border-radius: 27px;
-
-            box-shadow:
-                0 0 55px rgba(100, 105, 255, 0.18),
-                inset 0 0 25px rgba(148, 163, 255, 0.08);
-
-            backdrop-filter: blur(15px);
-
-            animation: logo-float 4s ease-in-out infinite;
-        }
-
-        .brand-icon svg {
-            width: 63px;
-            height: 63px;
-
-            filter: drop-shadow(0 0 12px rgba(129, 140, 248, 0.35));
-        }
-
-        @keyframes ring-rotate {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes ring-rotate-two {
-            from {
-                transform: rotate(55deg);
-            }
-
-            to {
-                transform: rotate(415deg);
-            }
-        }
-
-        @keyframes logo-float {
-            0%, 100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-6px);
-            }
-        }
-
-        /* ==================================================
-           TEXT
-        ================================================== */
-
-        .eyebrow {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-
-            margin-bottom: 21px;
-
-            color: #a7b5ff;
-
-            font-size: 10px;
-            font-weight: 700;
-
-            letter-spacing: 4px;
-            text-transform: uppercase;
-        }
-
-        .eyebrow::before,
-        .eyebrow::after {
-            width: 22px;
-            height: 1px;
-
-            background: linear-gradient(
-                90deg,
-                transparent,
-                #8291ff
-            );
-
-            content: "";
-        }
-
-        .eyebrow::after {
-            transform: rotate(180deg);
-        }
-
-        h1 {
-            color: #ffffff;
-
-            font-size: clamp(42px, 7.2vw, 76px);
-            font-weight: 800;
-
-            line-height: 1.06;
-            letter-spacing: -4px;
-        }
-
-        h1 span {
-            display: block;
-
-            margin-top: 8px;
-
-            color: transparent;
-
-            background: linear-gradient(
-                100deg,
-                #ffffff 0%,
-                #aeb9ff 45%,
-                #c8a9ff 85%
-            );
-
-            background-clip: text;
-            -webkit-background-clip: text;
-        }
-
-        .subtitle {
-            max-width: 520px;
-
-            margin: 24px auto 0;
-
-            color: #9ca9c5;
-
-            font-size: 14px;
-            font-weight: 400;
-
-            line-height: 1.95;
-        }
-
-        /* ==================================================
-           FEATURE PILLS
-        ================================================== */
-
-        .feature-list {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-
-            gap: 10px;
-
-            margin-top: 26px;
-        }
-
-        .feature {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-
-            padding: 9px 12px;
-
-            color: #c1cbe2;
-
-            font-size: 10px;
-            font-weight: 500;
-
-            background: rgba(255, 255, 255, 0.035);
-
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-        }
-
-        .feature-icon {
-            color: #9ca9ff;
-            font-size: 13px;
-        }
-
-        /* ==================================================
-           ENTER BUTTON
-        ================================================== */
-
-        .button-wrap {
-            margin-top: 34px;
-        }
-
-        .enter-button {
-            position: relative;
-
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 22px;
-
-            min-width: 250px;
-            min-height: 57px;
-
-            padding: 0 24px;
-
-            overflow: hidden;
-
-            color: #ffffff;
-
-            font-size: 13px;
-            font-weight: 700;
-
-            background: linear-gradient(
-                110deg,
-                #6678f4,
-                #7757e9 60%,
-                #8759ed
-            );
-
-            border: 1px solid rgba(202, 204, 255, 0.35);
-            border-radius: 13px;
-
-            box-shadow:
-                0 12px 32px rgba(95, 89, 231, 0.25),
-                inset 0 1px 0 rgba(255, 255, 255, 0.20);
-
-            cursor: pointer;
-
-            transition:
-                transform 0.25s ease,
-                box-shadow 0.25s ease,
-                border-color 0.25s ease;
-        }
-
-        .enter-button::before {
-            position: absolute;
-            top: 0;
-            left: -120%;
-
-            width: 70%;
-            height: 100%;
-
-            background: linear-gradient(
-                100deg,
-                transparent,
-                rgba(255, 255, 255, 0.18),
-                transparent
-            );
-
-            transform: skewX(-20deg);
-
-            transition: left 0.65s ease;
-
-            content: "";
-        }
-
-        .enter-button:hover {
-            transform: translateY(-3px);
-
-            border-color: rgba(218, 220, 255, 0.65);
-
-            box-shadow:
-                0 18px 40px rgba(95, 89, 231, 0.36),
-                inset 0 1px 0 rgba(255, 255, 255, 0.24);
-        }
-
-        .enter-button:hover::before {
-            left: 150%;
-        }
-
-        .enter-button:active {
-            transform: translateY(0);
-        }
-
-        .enter-button:focus-visible {
-            outline: 3px solid #c4b5fd;
-            outline-offset: 5px;
-        }
-
-        .enter-button:disabled {
-            cursor: wait;
-            opacity: 0.8;
-        }
-
-        .button-arrow {
-            display: grid;
-            place-items: center;
-
-            width: 29px;
-            height: 29px;
-
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.17);
-            border-radius: 9px;
-
-            font-size: 18px;
-
-            transition: transform 0.25s ease;
-        }
-
-        .enter-button:hover .button-arrow {
-            transform: translateX(4px);
-        }
-
-        /* ==================================================
-           LAUNCH STATUS
-        ================================================== */
-
-        .launch-message {
-            display: none;
-
-            margin-top: 20px;
-
-            color: #c4ceff;
-
-            font-size: 11px;
-            letter-spacing: 1px;
-        }
-
-        .loader {
-            display: inline-block;
-
-            width: 13px;
-            height: 13px;
-
-            margin-right: 9px;
-
-            vertical-align: -3px;
-
-            border: 2px solid rgba(196, 206, 255, 0.2);
-            border-top-color: #a5b4fc;
-            border-radius: 50%;
-
-            animation: spin 0.7s linear infinite;
-        }
-
-        .welcome-screen.launching .launch-message {
-            display: block;
-        }
-
-        .welcome-screen.launching .enter-button {
-            pointer-events: none;
-        }
-
-        .welcome-screen.launching .welcome-content {
-            animation: launch-out 0.8s ease forwards;
-        }
-
-        .welcome-screen.launching .topbar,
-        .welcome-screen.launching .footer {
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        @keyframes launch-out {
-            to {
-                opacity: 0;
-                transform: translateY(-15px) scale(0.97);
-            }
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* ==================================================
-           FLOATING PARTICLES
-        ================================================== */
-
-        .particles {
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-
-            overflow: hidden;
-
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            bottom: -12px;
-
-            width: 3px;
-            height: 3px;
-
-            background: #aab5ff;
-            border-radius: 50%;
-
-            box-shadow: 0 0 10px rgba(129, 140, 248, 0.75);
-
-            animation: particle-rise 10s linear infinite;
-        }
-
-        .particle:nth-child(1) {
-            left: 9%;
-            animation-duration: 13s;
-        }
-
-        .particle:nth-child(2) {
-            left: 22%;
-            animation-duration: 10s;
-            animation-delay: -5s;
-        }
-
-        .particle:nth-child(3) {
-            left: 38%;
-            animation-duration: 14s;
-            animation-delay: -8s;
-        }
-
-        .particle:nth-child(4) {
-            left: 65%;
-            animation-duration: 12s;
-            animation-delay: -3s;
-        }
-
-        .particle:nth-child(5) {
-            left: 81%;
-            animation-duration: 15s;
-            animation-delay: -7s;
-        }
-
-        .particle:nth-child(6) {
-            left: 94%;
-            animation-duration: 11s;
-            animation-delay: -4s;
-        }
-
-        @keyframes particle-rise {
-            0% {
-                opacity: 0;
-                transform: translateY(0);
-            }
-
-            15% {
-                opacity: 0.7;
-            }
-
-            85% {
-                opacity: 0.3;
-            }
-
-            100% {
-                opacity: 0;
-                transform: translateY(-105vh);
-            }
-        }
-
-        /* ==================================================
-           FOOTER
-        ================================================== */
-
-        .footer {
-            position: absolute;
-            right: 5.5%;
-            bottom: 24px;
-            left: 5.5%;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-
-            padding-top: 17px;
-
-            color: #7885a4;
-
-            font-size: 9px;
-            font-weight: 500;
-
-            letter-spacing: 1.1px;
-
-            border-top: 1px solid rgba(255, 255, 255, 0.07);
-
-            transition: opacity 0.4s ease;
-        }
-
-        .footer-credit {
-            color: #8d99b5;
-            letter-spacing: 0.4px;
-        }
-
-        .footer-credit strong {
-            color: #c0b1ff;
-            font-weight: 700;
-        }
-
-        .heart {
-            padding: 0 4px;
-            color: #b39aff;
-        }
-
-        /* ==================================================
-           TABLET
-        ================================================== */
-
-        @media (max-width: 760px) {
-            .topbar {
-                padding: 20px 25px;
-            }
-
-            .footer {
-                right: 25px;
-                left: 25px;
-            }
-
-            .logo-stage {
-                width: 140px;
-                height: 140px;
-            }
-
-            .logo-ring {
-                width: 120px;
-                height: 120px;
-            }
-
-            .logo-ring-two {
-                width: 100px;
-                height: 130px;
-            }
-
-            h1 {
-                letter-spacing: -2.5px;
-            }
-        }
-
-        /* ==================================================
-           MOBILE
-        ================================================== */
-
-        @media (max-width: 520px) {
-            .welcome-screen {
-                padding: 100px 20px 115px;
-            }
-
-            .topbar {
-                padding: 17px 18px;
-            }
-
-            .mini-logo {
-                width: 34px;
-                height: 34px;
-                border-radius: 10px;
-            }
-
-            .top-brand {
-                gap: 9px;
-            }
-
-            .top-brand-name {
-                font-size: 11px;
-                letter-spacing: 1.2px;
-            }
-
-            .system-status {
-                gap: 6px;
-                padding: 8px 9px;
-                font-size: 9px;
-            }
-
-            .logo-stage {
-                width: 122px;
-                height: 122px;
-                margin-bottom: 25px;
-            }
-
-            .logo-ring {
-                width: 110px;
-                height: 110px;
-            }
-
-            .logo-ring-two {
-                width: 85px;
-                height: 115px;
-            }
-
-            .brand-icon {
-                width: 73px;
-                height: 73px;
-                border-radius: 22px;
-            }
-
-            .brand-icon svg {
-                width: 53px;
-                height: 53px;
-            }
-
-            .eyebrow {
-                gap: 7px;
-                margin-bottom: 18px;
-
-                font-size: 8px;
-                letter-spacing: 2px;
-            }
-
-            .eyebrow::before,
-            .eyebrow::after {
-                width: 13px;
-            }
-
-            h1 {
-                font-size: clamp(36px, 10vw, 50px);
-                letter-spacing: -1.8px;
-            }
-
-            h1 span {
-                margin-top: 8px;
-            }
-
-            .subtitle {
-                margin-top: 19px;
-                font-size: 12px;
-                line-height: 1.9;
-            }
-
-            .feature-list {
-                gap: 7px;
-                margin-top: 22px;
-            }
-
-            .feature {
-                gap: 6px;
-                padding: 8px 9px;
-                font-size: 9px;
-            }
-
-            .button-wrap {
-                width: 100%;
-                margin-top: 28px;
-            }
-
-            .enter-button {
-                width: 100%;
-                max-width: 280px;
-                min-width: 0;
-                min-height: 54px;
-                gap: 15px;
-            }
-
-            .footer {
-                bottom: 13px;
-                left: 14px;
-                right: 14px;
-
-                flex-direction: column;
-                justify-content: center;
-
-                gap: 8px;
-
-                padding-top: 13px;
-
-                font-size: 8px;
-                text-align: center;
-                letter-spacing: 0.6px;
-            }
-        }
-
-        /* Short screens */
-
-        @media (max-height: 700px) and (min-width: 521px) {
-            .welcome-screen {
-                padding-top: 80px;
-                padding-bottom: 80px;
-            }
-
-            .logo-stage {
-                width: 120px;
-                height: 120px;
-                margin-bottom: 17px;
-            }
-
-            .logo-ring {
-                width: 110px;
-                height: 110px;
-            }
-
-            .logo-ring-two {
-                width: 90px;
-                height: 120px;
-            }
-
-            .brand-icon {
-                width: 72px;
-                height: 72px;
-            }
-
-            .brand-icon svg {
-                width: 52px;
-                height: 52px;
-            }
-
-            .subtitle {
-                margin-top: 15px;
-            }
-
-            .feature-list {
-                margin-top: 17px;
-            }
-
-            .button-wrap {
-                margin-top: 22px;
-            }
-        }
-
-        /* ==================================================
-           REDUCED MOTION
-        ================================================== */
-
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation: none !important;
-                scroll-behavior: auto !important;
-                transition: none !important;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080b18">
+  <title>Orbit System | Welcome</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #080b18;
+      --text: #f7f8ff;
+      --muted: #9aa6c3;
+      --line: rgba(197, 205, 255, .12);
+      --indigo: #7785ff;
+      --violet: #9658ed;
+      --cyan: #68e6f5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    button:focus-visible {
+      outline: 2px solid #c6caff;
+      outline-offset: 4px;
+    }
+
+    .welcome {
+      position: relative;
+      isolation: isolate;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 0 clamp(20px, 5.5vw, 90px);
+      overflow: hidden;
+      background:
+        radial-gradient(
+          ellipse at 50% 42%,
+          rgba(75, 86, 192, .19),
+          transparent 39%
+        ),
+        linear-gradient(
+          130deg,
+          #0b1023 0%,
+          #080b17 48%,
+          #17102e 100%
+        );
+    }
+
+    /* Background grid */
+
+    .grid {
+      position: absolute;
+      inset: 0;
+      z-index: -3;
+      pointer-events: none;
+      opacity: .7;
+      background-image:
+        linear-gradient(
+          rgba(153, 166, 255, .045) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(153, 166, 255, .045) 1px,
+          transparent 1px
+        );
+      background-size: 54px 54px;
+      mask-image: radial-gradient(
+        ellipse at center,
+        #000 15%,
+        transparent 83%
+      );
+    }
+
+    /* Ambient lights */
+
+    .glow {
+      position: absolute;
+      z-index: -2;
+      width: 360px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      filter: blur(110px);
+      opacity: .25;
+      pointer-events: none;
+      animation: drift 14s ease-in-out infinite alternate;
+    }
+
+    .glow-a {
+      top: -230px;
+      left: -120px;
+      background: #4d5fff;
+    }
+
+    .glow-b {
+      right: -160px;
+      bottom: -220px;
+      background: #8b35ec;
+      animation-delay: -6s;
+    }
+
+    .glow-c {
+      width: 200px;
+      top: 42%;
+      left: 44%;
+      background: #176bb9;
+      opacity: .12;
+    }
+
+    /* Navigation */
+
+    .topbar {
+      min-height: 96px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, .065);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(145deg, #8b98ff, #5b4bd1);
+      border: 1px solid rgba(255, 255, 255, .24);
+      box-shadow: 0 8px 28px rgba(92, 86, 233, .28);
+    }
+
+    .brand-mark svg {
+      width: 27px;
+      height: 27px;
+    }
+
+    .brand-name {
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 1.7px;
+    }
+
+    .brand-name span {
+      color: #98a6ff;
+    }
+
+    .workspace-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 10px 14px;
+      color: #b7c2dc;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, .035);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #52d7a4;
+      box-shadow: 0 0 12px rgba(82, 215, 164, .7);
+    }
+
+    /* Main hero */
+
+    .hero {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px 0 42px;
+      text-align: center;
+      animation: enter .8s cubic-bezier(.2, .7, .2, 1) both;
+    }
+
+    /* Animated orbital logo */
+
+    .orbit-art {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 132px;
+      height: 132px;
+      margin-bottom: 18px;
+    }
+
+    .orbit-ring {
+      position: absolute;
+      width: 112px;
+      height: 112px;
+      border: 1px solid rgba(147, 157, 255, .28);
+      border-radius: 50%;
+      animation: rotate 24s linear infinite;
+    }
+
+    .orbit-ring::after {
+      content: "";
+      position: absolute;
+      right: 13px;
+      top: 12px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 14px var(--cyan);
+    }
+
+    .orbit-ring.ring-two {
+      width: 88px;
+      height: 120px;
+      border-color: rgba(177, 145, 255, .5);
+      animation-name: rotate-two;
+      animation-duration: 18s;
+    }
+
+    .orbit-ring.ring-two::after {
+      right: auto;
+      top: auto;
+      left: 10px;
+      bottom: 10px;
+      width: 6px;
+      height: 6px;
+      background: #bdaaff;
+      box-shadow: 0 0 12px #bdaaff;
+    }
+
+    .orbit-core {
+      display: grid;
+      place-items: center;
+      width: 70px;
+      height: 70px;
+      border-radius: 23px;
+      background: linear-gradient(
+        145deg,
+        rgba(117, 132, 255, .26),
+        rgba(104, 70, 205, .12)
+      );
+      border: 1px solid rgba(180, 190, 255, .4);
+      box-shadow:
+        0 0 45px rgba(100, 105, 255, .19),
+        inset 0 0 24px rgba(148, 163, 255, .08);
+      backdrop-filter: blur(12px);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .orbit-core svg {
+      width: 52px;
+      height: 52px;
+      filter: drop-shadow(
+        0 0 10px rgba(129, 140, 248, .3)
+      );
+    }
+
+    /* Heading */
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 19px;
+      color: #aab6ff;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 3.7px;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before,
+    .eyebrow::after {
+      content: "";
+      width: 23px;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        #8794ff
+      );
+    }
+
+    .eyebrow::after {
+      transform: rotate(180deg);
+    }
+
+    h1 {
+      max-width: 850px;
+      font-size: clamp(42px, 6.2vw, 76px);
+      line-height: 1.07;
+      font-weight: 900;
+      letter-spacing: -.065em;
+    }
+
+    h1 span {
+      display: block;
+      margin-top: 7px;
+      color: transparent;
+      background: linear-gradient(
+        100deg,
+        #c1c9ff 8%,
+        #aeb7ff 48%,
+        #d2b2ff 92%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .subtitle {
+      max-width: 540px;
+      margin: 21px auto 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.85;
+    }
+
+    /* Feature cards */
+
+    .features {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 23px;
+    }
+
+    .feature {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 13px;
+      color: #c5cee6;
+      font-size: 10px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, .035);
+      border: 1px solid rgba(255, 255, 255, .09);
+      border-radius: 10px;
+      transition: .2s ease;
+    }
+
+    .feature:hover {
+      transform: translateY(-2px);
+      border-color: rgba(153, 163, 255, .3);
+      background: rgba(255, 255, 255, .06);
+    }
+
+    .feature-icon {
+      color: #a9b4ff;
+      font-size: 14px;
+    }
+
+    /* Main button */
+
+    .actions {
+      margin-top: 27px;
+    }
+
+    .enter-button {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      min-width: 270px;
+      min-height: 56px;
+      padding: 0 18px 0 25px;
+      overflow: hidden;
+      color: white;
+      font-size: 13px;
+      font-weight: 800;
+      border: 1px solid rgba(208, 210, 255, .36);
+      border-radius: 14px;
+      cursor: pointer;
+      background: linear-gradient(
+        110deg,
+        #6679f4,
+        #7657e9 60%,
+        #8a59ee
+      );
+      box-shadow:
+        0 14px 34px rgba(95, 89, 231, .25),
+        inset 0 1px 0 rgba(255, 255, 255, .2);
+      transition: transform .22s ease, box-shadow .22s ease;
+    }
+
+    .enter-button::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 -120%;
+      width: 70%;
+      background: linear-gradient(
+        100deg,
+        transparent,
+        rgba(255, 255, 255, .2),
+        transparent
+      );
+      transform: skewX(-20deg);
+      transition: left .65s ease;
+    }
+
+    .enter-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 42px rgba(95, 89, 231, .36);
+    }
+
+    .enter-button:hover::before {
+      left: 150%;
+    }
+
+    .enter-button:active {
+      transform: translateY(0);
+    }
+
+    .enter-button:disabled {
+      cursor: wait;
+      opacity: .82;
+    }
+
+    .arrow {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      background: rgba(255, 255, 255, .15);
+      border: 1px solid rgba(255, 255, 255, .18);
+      font-size: 18px;
+      transition: transform .2s ease;
+    }
+
+    .enter-button:hover .arrow {
+      transform: translateX(4px);
+    }
+
+    .launch-message {
+      display: none;
+      margin-top: 16px;
+      color: #c4ceff;
+      font-size: 11px;
+      letter-spacing: .8px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin-right: 8px;
+      vertical-align: -2px;
+      border: 2px solid rgba(196, 206, 255, .22);
+      border-top-color: #a5b4fc;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+
+    .welcome.launching .launch-message {
+      display: block;
+    }
+
+    .welcome.launching .hero {
+      animation: launch-out .65s ease forwards;
+    }
+
+    .welcome.launching .topbar,
+    .welcome.launching .footer {
+      opacity: 0;
+      transition: opacity .3s ease;
+    }
+
+    /* Footer */
+
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 17px 0 22px;
+      color: #7885a4;
+      border-top: 1px solid rgba(255, 255, 255, .07);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: opacity .3s ease;
+    }
+
+    .credit {
+      color: #8d99b5;
+      letter-spacing: .25px;
+    }
+
+    .credit strong {
+      color: #c0b1ff;
+      font-weight: 800;
+    }
+
+    .heart {
+      color: #b39aff;
+      padding: 0 4px;
+    }
+
+    /* Floating particles */
+
+    .particle {
+      position: absolute;
+      z-index: -1;
+      bottom: -8px;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: #aab5ff;
+      box-shadow: 0 0 10px rgba(129, 140, 248, .75);
+      animation: rise 12s linear infinite;
+      pointer-events: none;
+    }
+
+    .p1 { left: 9%; animation-duration: 13s; }
+    .p2 { left: 22%; animation-delay: -5s; }
+    .p3 { left: 38%; animation-duration: 14s; animation-delay: -8s; }
+    .p4 { left: 65%; animation-duration: 12s; animation-delay: -3s; }
+    .p5 { left: 81%; animation-duration: 15s; animation-delay: -7s; }
+    .p6 { left: 94%; animation-duration: 11s; animation-delay: -4s; }
+
+    /* Animations */
+
+    @keyframes enter {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes launch-out {
+      to {
+        opacity: 0;
+        transform: translateY(-12px) scale(.98);
+      }
+    }
+
+    @keyframes rotate {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes rotate-two {
+      from { transform: rotate(55deg); }
+      to { transform: rotate(415deg); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @keyframes drift {
+      to { transform: translate(30px, 35px) scale(1.12); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes rise {
+      0% {
+        opacity: 0;
+        transform: translateY(0);
+      }
+      15% { opacity: .7; }
+      85% { opacity: .3; }
+      100% {
+        opacity: 0;
+        transform: translateY(-100vh);
+      }
+    }
+
+    /* Tablet */
+
+    @media (max-width: 760px) {
+      .topbar {
+        min-height: 80px;
+      }
+
+      .hero {
+        padding: 26px 0 32px;
+      }
+
+      .orbit-art {
+        width: 116px;
+        height: 116px;
+      }
+
+      .orbit-ring {
+        width: 100px;
+        height: 100px;
+      }
+
+      .orbit-ring.ring-two {
+        width: 80px;
+        height: 108px;
+      }
+
+      .footer {
+        font-size: 8px;
+        letter-spacing: .5px;
+      }
+    }
+
+    /* Mobile */
+
+    @media (max-width: 520px) {
+      .welcome {
+        padding: 0 17px;
+      }
+
+      .topbar {
+        min-height: 72px;
+        gap: 10px;
+      }
+
+      .brand {
+        gap: 8px;
+      }
+
+      .brand-mark {
+        width: 35px;
+        height: 35px;
+        border-radius: 11px;
+      }
+
+      .brand-mark svg {
+        width: 23px;
+        height: 23px;
+      }
+
+      .brand-name {
+        font-size: 10px;
+        letter-spacing: 1.1px;
+      }
+
+      .workspace-status {
+        gap: 6px;
+        padding: 8px 9px;
+        font-size: 9px;
+      }
+
+      .hero {
+        padding: 25px 0 29px;
+      }
+
+      .orbit-art {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 18px;
+      }
+
+      .orbit-ring {
+        width: 88px;
+        height: 88px;
+      }
+
+      .orbit-ring.ring-two {
+        width: 70px;
+        height: 94px;
+      }
+
+      .orbit-core {
+        width: 62px;
+        height: 62px;
+        border-radius: 20px;
+      }
+
+      .orbit-core svg {
+        width: 46px;
+        height: 46px;
+      }
+
+      .eyebrow {
+        gap: 7px;
+        margin-bottom: 15px;
+        font-size: 8px;
+        letter-spacing: 1.7px;
+      }
+
+      .eyebrow::before,
+      .eyebrow::after {
+        width: 12px;
+      }
+
+      h1 {
+        font-size: clamp(35px, 9.7vw, 48px);
+        letter-spacing: -.06em;
+      }
+
+      .subtitle {
+        margin-top: 17px;
+        font-size: 12px;
+        line-height: 1.8;
+      }
+
+      .features {
+        gap: 7px;
+        margin-top: 19px;
+      }
+
+      .feature {
+        gap: 6px;
+        padding: 8px 9px;
+        font-size: 9px;
+      }
+
+      .actions {
+        width: 100%;
+        margin-top: 23px;
+      }
+
+      .enter-button {
+        width: 100%;
+        max-width: 300px;
+        min-width: 0;
+        min-height: 52px;
+        gap: 14px;
+      }
+
+      .footer {
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+        padding: 13px 0 16px;
+        text-align: center;
+        line-height: 1.5;
+      }
+    }
+
+    /* Short laptop screens */
+
+    @media (max-height: 720px) and (min-width: 521px) {
+      .topbar {
+        min-height: 76px;
+      }
+
+      .hero {
+        padding: 15px 0 20px;
+      }
+
+      .orbit-art {
+        width: 95px;
+        height: 95px;
+        margin-bottom: 12px;
+      }
+
+      .orbit-ring {
+        width: 84px;
+        height: 84px;
+      }
+
+      .orbit-ring.ring-two {
+        width: 66px;
+        height: 90px;
+      }
+
+      .orbit-core {
+        width: 60px;
+        height: 60px;
+        border-radius: 19px;
+      }
+
+      .orbit-core svg {
+        width: 44px;
+        height: 44px;
+      }
+
+      .eyebrow {
+        margin-bottom: 12px;
+      }
+
+      h1 {
+        font-size: clamp(36px, 5vw, 58px);
+      }
+
+      .subtitle {
+        margin-top: 13px;
+        line-height: 1.65;
+      }
+
+      .features {
+        margin-top: 15px;
+      }
+
+      .actions {
+        margin-top: 18px;
+      }
+
+      .footer {
+        padding: 12px 0 14px;
+      }
+    }
+
+    /* Accessibility */
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <main class="welcome" id="welcomeScreen">
 
-    <main class="welcome-screen" id="welcomeScreen">
+    <div class="grid" aria-hidden="true"></div>
+    <div class="glow glow-a" aria-hidden="true"></div>
+    <div class="glow glow-b" aria-hidden="true"></div>
+    <div class="glow glow-c" aria-hidden="true"></div>
 
-        <div class="background-grid" aria-hidden="true"></div>
+    <span class="particle p1" aria-hidden="true"></span>
+    <span class="particle p2" aria-hidden="true"></span>
+    <span class="particle p3" aria-hidden="true"></span>
+    <span class="particle p4" aria-hidden="true"></span>
+    <span class="particle p5" aria-hidden="true"></span>
+    <span class="particle p6" aria-hidden="true"></span>
 
-        <div class="glow glow-one" aria-hidden="true"></div>
-        <div class="glow glow-two" aria-hidden="true"></div>
-        <div class="glow glow-three" aria-hidden="true"></div>
+    <!-- Navigation -->
 
-        <div class="particles" aria-hidden="true">
-            <span class="particle"></span>
-            <span class="particle"></span>
-            <span class="particle"></span>
-            <span class="particle"></span>
-            <span class="particle"></span>
-            <span class="particle"></span>
+    <header class="topbar">
+      <a class="brand" href="index.html" aria-label="Orbit System home">
+
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none">
+            <circle
+              cx="24" cy="24" r="11"
+              stroke="white" stroke-width="2.5"
+            />
+            <ellipse
+              cx="24" cy="24" rx="20" ry="8"
+              stroke="#C4B5FD" stroke-width="2.5"
+              transform="rotate(-35 24 24)"
+            />
+            <circle cx="24" cy="24" r="3.5" fill="white"/>
+          </svg>
+        </span>
+
+        <span class="brand-name">
+          ORBIT <span>SYSTEM</span>
+        </span>
+      </a>
+
+      <div class="workspace-status">
+        <span class="status-dot" aria-hidden="true"></span>
+        Enterprise Workspace
+      </div>
+    </header>
+
+    <!-- Hero content -->
+
+    <section class="hero" aria-labelledby="welcomeTitle">
+
+      <div class="orbit-art" aria-hidden="true">
+        <div class="orbit-ring"></div>
+        <div class="orbit-ring ring-two"></div>
+
+        <div class="orbit-core">
+          <svg
+            viewBox="0 0 100 100"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="50" cy="50" r="27"
+              stroke="#C4B5FD" stroke-width="4"
+            />
+            <ellipse
+              cx="50" cy="50" rx="41" ry="16"
+              transform="rotate(-35 50 50)"
+              stroke="#818CF8" stroke-width="4"
+            />
+            <circle cx="50" cy="50" r="7" fill="#fff"/>
+            <circle cx="80" cy="29" r="4.5" fill="#6EE7F9"/>
+          </svg>
+        </div>
+      </div>
+
+      <p class="eyebrow">The Future of Work Management</p>
+
+      <h1 id="welcomeTitle">
+        Everything connected.
+        <span>One Orbit.</span>
+      </h1>
+
+      <p class="subtitle">
+        Bring your people, projects, tasks and inventory together
+        in one intelligent workspace. Work smarter, collaborate
+        seamlessly and keep your entire organization moving forward.
+      </p>
+
+      <!-- Features -->
+
+      <div class="features" aria-label="Platform features">
+
+        <div class="feature">
+          <span class="feature-icon" aria-hidden="true">✳</span>
+          Project Management
         </div>
 
-        <!-- Top navigation -->
+        <div class="feature">
+          <span class="feature-icon" aria-hidden="true">◈</span>
+          Team Collaboration
+        </div>
 
-        <header class="topbar">
+        <div class="feature">
+          <span class="feature-icon" aria-hidden="true">▦</span>
+          Smart Inventory
+        </div>
 
-            <div class="top-brand">
+      </div>
 
-                <div class="mini-logo" aria-hidden="true">
-                    <svg viewBox="0 0 48 48" fill="none">
-                        <circle
-                            cx="24"
-                            cy="24"
-                            r="12"
-                            stroke="white"
-                            stroke-width="2.5"
-                        />
+      <!-- Enter button -->
 
-                        <ellipse
-                            cx="24"
-                            cy="24"
-                            rx="21"
-                            ry="8"
-                            stroke="#C4B5FD"
-                            stroke-width="2.5"
-                            transform="rotate(-35 24 24)"
-                        />
+      <div class="actions">
+        <button
+          class="enter-button"
+          type="button"
+          id="enterButton"
+        >
+          <span id="buttonLabel">Enter Orbit System</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </button>
+      </div>
 
-                        <circle cx="24" cy="24" r="3.5" fill="white"/>
-                    </svg>
-                </div>
+      <p
+        class="launch-message"
+        id="launchMessage"
+        aria-live="polite"
+      >
+        <span class="spinner" aria-hidden="true"></span>
+        Preparing your workspace...
+      </p>
 
-                <div class="top-brand-name">
-                    ORBIT <span>SYSTEM</span>
-                </div>
+    </section>
 
-            </div>
+    <!-- Footer -->
 
-            <div class="system-status">
-                <span class="status-dot"></span>
-                Enterprise Workspace
-            </div>
+    <footer class="footer">
+      <span>
+        © <span id="currentYear"></span>
+        ORBIT SYSTEM · SMARTER WORK. BETTER RESULTS.
+      </span>
 
-        </header>
+      <span class="credit">
+        Crafted with <span class="heart" aria-label="love">♥</span>
+        by <strong>The Mind Creater</strong>
+      </span>
+    </footer>
 
-        <!-- Hero -->
+  </main>
 
-        <section class="welcome-content" aria-labelledby="welcomeTitle">
+  <script>
+    "use strict";
 
-            <div class="logo-stage" aria-hidden="true">
+    const screen = document.getElementById("welcomeScreen");
+    const button = document.getElementById("enterButton");
+    const label = document.getElementById("buttonLabel");
+    const launchMessage = document.getElementById("launchMessage");
 
-                <div class="logo-ring"></div>
-                <div class="logo-ring logo-ring-two"></div>
+    let isLaunching = false;
 
-                <div class="brand-icon">
-                    <svg
-                        viewBox="0 0 100 100"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
+    // Automatically update the year.
+    document.getElementById("currentYear").textContent =
+      new Date().getFullYear();
 
-                        <circle
-                            cx="50"
-                            cy="50"
-                            r="28"
-                            stroke="#C4B5FD"
-                            stroke-width="4"
-                        />
+    // Launch the login page.
+    function enterOrbit() {
+      if (isLaunching) return;
 
-                        <ellipse
-                            cx="50"
-                            cy="50"
-                            rx="42"
-                            ry="16"
-                            transform="rotate(-35 50 50)"
-                            stroke="#818CF8"
-                            stroke-width="4"
-                        />
+      isLaunching = true;
+      button.disabled = true;
 
-                        <circle cx="50" cy="50" r="8" fill="#FFFFFF"/>
-                        <circle cx="81" cy="29" r="5" fill="#6EE7F9"/>
+      label.textContent = "Launching Workspace";
+      launchMessage.style.display = "block";
+      screen.classList.add("launching");
 
-                    </svg>
-                </div>
+      window.setTimeout(() => {
+        window.location.href = "login.html";
+      }, 700);
+    }
 
-            </div>
-
-            <p class="eyebrow">
-                The Future of Work Management
-            </p>
-
-            <h1 id="welcomeTitle">
-                Everything connected.
-                <span>One Orbit.</span>
-            </h1>
-
-            <p class="subtitle">
-                Bring your people, projects, tasks and inventory
-                together in one intelligent workspace.
-                Work smarter, collaborate seamlessly and keep
-                your entire organization moving forward.
-            </p>
-
-            <div class="feature-list" aria-label="Platform features">
-
-                <div class="feature">
-                    <span class="feature-icon" aria-hidden="true">✳</span>
-                    Project Management
-                </div>
-
-                <div class="feature">
-                    <span class="feature-icon" aria-hidden="true">◈</span>
-                    Team Collaboration
-                </div>
-
-                <div class="feature">
-                    <span class="feature-icon" aria-hidden="true">▦</span>
-                    Smart Inventory
-                </div>
-
-            </div>
-
-            <div class="button-wrap">
-
-                <button
-                    type="button"
-                    class="enter-button"
-                    id="enterButton"
-                    onclick="enterOrbit()">
-
-                    <span id="buttonLabel">Enter Orbit System</span>
-
-                    <span class="button-arrow" aria-hidden="true">→</span>
-
-                </button>
-
-            </div>
-
-            <p class="launch-message" id="launchMessage" aria-live="polite">
-                <span class="loader" aria-hidden="true"></span>
-                Preparing your workspace...
-            </p>
-
-        </section>
-
-        <!-- Footer -->
-
-        <footer class="footer">
-
-            <span>
-                © <span id="currentYear"></span> ORBIT SYSTEM
-                · SMARTER WORK. BETTER RESULTS.
-            </span>
-
-            <span class="footer-credit">
-                Crafted with <span class="heart">♥</span> by
-                <strong>The Mind Creater</strong>
-            </span>
-
-        </footer>
-
-    </main>
-
-    <script>
-        "use strict";
-
-        let isLaunching = false;
-
-        document.getElementById("currentYear").textContent =
-            new Date().getFullYear();
-
-        function enterOrbit() {
-            if (isLaunching) {
-                return;
-            }
-
-            isLaunching = true;
-
-            const screen = document.getElementById("welcomeScreen");
-            const button = document.getElementById("enterButton");
-            const label = document.getElementById("buttonLabel");
-            const message = document.getElementById("launchMessage");
-
-            button.disabled = true;
-            label.textContent = "Launching Workspace";
-
-            message.style.display = "block";
-            screen.classList.add("launching");
-
-            window.setTimeout(() => {
-                window.location.href = "login.html";
-            }, 900);
-        }
-    </script>
-
+    button.addEventListener("click", enterOrbit);
+  </script>
 </body>
 </html>

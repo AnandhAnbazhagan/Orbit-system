@@ -1,4 +1,9 @@
-const API_BASE_URL = "http://127.0.0.1:8000";
+const API_BASE_URL =
+    window.location.port === "5500" ||
+    window.location.port === "5501"
+        ? "http://127.0.0.1:8000"
+        : window.location.origin;
+
 const TOKEN_KEY = "orbit_token";
 const USER_KEY = "orbit_user";
 
@@ -10,7 +15,7 @@ function getAuthToken() {
     return localStorage.getItem(TOKEN_KEY);
 }
 
-function setAuthToken(token) {
+function setAuthToken(token) {notepad .\frontend\js\api.js
     if (!token || typeof token !== "string") {
         throw new Error("Cannot save an empty authentication token.");
     }
@@ -87,7 +92,6 @@ async function apiRequest(path, options = {}) {
 
     const headers = getAuthHeaders(customHeaders);
 
-    // Let the browser set multipart/form-data boundaries.
     const isFormData =
         typeof FormData !== "undefined" &&
         fetchOptions.body instanceof FormData;
@@ -104,20 +108,29 @@ async function apiRequest(path, options = {}) {
     let response;
 
     try {
-        response = await fetch(`${API_BASE_URL}${path}`, {
-            ...fetchOptions,
-            headers
-        });
+        const normalizedPath = path.startsWith("/")
+            ? path
+            : `/${path}`;
+
+        response = await fetch(
+            `${API_BASE_URL}${normalizedPath}`,
+            {
+                ...fetchOptions,
+                headers
+            }
+        );
     } catch (error) {
         console.error("Orbit API connection error:", error);
 
         throw new Error(
-            "Cannot connect to Orbit API. Start FastAPI at " +
-            API_BASE_URL
+            `Cannot connect to Orbit API at ${API_BASE_URL}. ` +
+            "Check that the backend and Docker containers are running."
         );
     }
 
-    const contentType = response.headers.get("content-type") || "";
+    const contentType =
+        response.headers.get("content-type") || "";
+
     let result = null;
 
     try {
@@ -132,7 +145,6 @@ async function apiRequest(path, options = {}) {
     }
 
     if (response.status === 401) {
-        // Do not redirect login requests when credentials are incorrect.
         if (path !== "/api/auth/login") {
             clearAuthToken();
         }
@@ -232,14 +244,18 @@ async function apiLogin(email, password) {
     });
 
     if (!response?.access_token) {
-        throw new Error("Login response did not contain an access token.");
+        throw new Error(
+            "Login response did not contain an access token."
+        );
     }
 
     setAuthToken(response.access_token);
 
     try {
         const user = await apiGetCurrentUser();
+
         localStorage.setItem(USER_KEY, JSON.stringify(user));
+
         return { ...response, user };
     } catch (error) {
         clearAuthToken();
@@ -257,7 +273,6 @@ async function apiGetCurrentUser() {
 
 // =========================================================
 // REQUIRE AUTHENTICATION
-// Dashboard and other protected pages can use this function.
 // =========================================================
 
 async function requireAuth() {
@@ -314,7 +329,7 @@ function getApiBaseUrl() {
 }
 
 // =========================================================
-// EXPOSE HELPERS FOR OTHER FRONTEND SCRIPTS
+// EXPOSE HELPERS
 // =========================================================
 
 Object.assign(window, {
